@@ -28,13 +28,13 @@ class TestWebAssets(unittest.TestCase):
     """Base class for testing webassets."""
 
     def setUp(self, override=None):
-        import assets
+        import webassets
         self.temp_path = mkdtemp(prefix='pelicantests.')
         settings = {
             'ASSET_CONFIG': [('sass_bin', 'scss')],
             'PATH': os.path.join(os.path.dirname(CUR_DIR), 'test_data', 'content'),
             'OUTPUT_PATH': self.temp_path,
-            'PLUGINS': [assets],
+            'PLUGINS': [webassets],
             'THEME': THEME_DIR,
             'LOCALE': locale.normalize('en_US'),
             'CACHE_CONTENT': False
