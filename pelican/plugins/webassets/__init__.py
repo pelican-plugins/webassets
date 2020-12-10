@@ -1,0 +1,1 @@
+from .webassets import *  # NOQA
