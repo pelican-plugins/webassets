@@ -64,9 +64,13 @@ def create_assets_env(generator):
         logger.debug('webassets: adding config: \'%s\' -> \'%s\'', key, value)
         generator.env.assets_environment.config[key] = value
 
-    if "ASSET_BUNDLES" in generator.settings:
-        for name, args, kwargs in generator.settings["ASSET_BUNDLES"]:
-            generator.env.assets_environment.register(name, *args, **kwargs)
+    # use WEBASSETS_BUNDLES over ASSET_BUNDLES
+    for name, args, kwargs in generator.settings.get(
+            'WEBASSETS_BUNDLES', generator.settings.get(
+                'ASSET_BUNDLES', [])):
+
+        logger.debug("webassets: registering bundle: '%s'", name)
+        generator.env.assets_environment.register(name, *args, **kwargs)
 
     # prefer WEBASSETS_DEBUG -> ASSET_DEBUG -> logger.level
     in_debug = generator.settings.get(

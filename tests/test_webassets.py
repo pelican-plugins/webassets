@@ -145,6 +145,23 @@ class TestWebAssetsConfigDeprecation(TestWebAssets):
                 'deprecated in favor for WEBASSETS_DEBUG. Please update your '
                 'config file.', log.output)
 
+    def test_asset_bundles_deprication(self):
+        """ensure a deprication WARNING is emitted when using ASSET_BUNDLES"""
+        with self.assertLogs(LOGGER_NAME, level='WARNING') as log:
+            super().setUp(override={
+                'ASSET_BUNDLES': [
+                    ('bundle_name', (
+                        'arguments',
+                    ), {
+                        'output': 'bundle_output',
+                        'filters': ['libsass']})
+                ]})
+
+            self.assertIn(
+                'WARNING:pelican.plugins.webassets.webassets:ASSET_BUNDLES has been '
+                'deprecated in favor for WEBASSETS_BUNDLES. Please update your '
+                'config file.', log.output)
+
 
 class DummyPlugin():
     """a dummy plugin to get the webassets configuration settings"""
@@ -217,6 +234,48 @@ class TestWebAssetsConfigSettings(TestWebAssets):
         logging.getLogger('pelican').setLevel(logging.DEBUG)
         generator = self.get_generators()
         self.assertTrue(generator.env.assets_environment.debug)
+
+    def test_webassets_bundles(self):
+        """ensure webassets.Bundles are passed to the webassets module"""
+        bundle_name = 'test_bundle_name'
+        bundle_args = ('test', 'arguments', 'for', 'webassets')
+        bundle_kwargs = {'output': 'test_bundle_output', 'filters': ['libsass']}
+        generator = self.get_generators({
+            'WEBASSETS_BUNDLES': [(bundle_name, bundle_args, bundle_kwargs)]})
+
+        ## TODO: Super Hacky
+        bundles = generator.env.assets_environment._named_bundles
+        self.assertIn(bundle_name, bundles)
+
+        # ensure all arguments are given
+        test_bundle = bundles[bundle_name]
+        for argument in bundle_args:
+            self.assertIn(argument, test_bundle.contents)
+
+        # ensure the libsass filter is used
+        from webassets.filter.libsass import LibSass
+        self.assertIn(LibSass(), test_bundle.filters)
+
+    def test_asset_bundles(self):
+        """ensure ASSET_BUNDLES are passed to the webassets module"""
+        bundle_name = 'asset_test_bundle_name'
+        bundle_args = ('asset', 'arguments', 'for', 'webassets')
+        bundle_kwargs = {'output': 'asset_bundle_output', 'filters': ['libsass']}
+        generator = self.get_generators({
+            'ASSET_BUNDLES': [(bundle_name, bundle_args, bundle_kwargs)]})
+
+        ## TODO: Super Hacky
+        bundles = generator.env.assets_environment._named_bundles
+        self.assertIn(bundle_name, bundles)
+
+        # ensure all arguments are given
+        test_bundle = bundles[bundle_name]
+        for argument in bundle_args:
+            self.assertIn(argument, test_bundle.contents)
+
+        # ensure the libsass filter is used
+        from webassets.filter.libsass import LibSass
+        self.assertIn(LibSass(), test_bundle.filters)
 
 
 class TestDepricationDate(unittest.TestCase):
