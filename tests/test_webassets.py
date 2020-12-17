@@ -70,7 +70,7 @@ class TestWebAssetsRelativeURLS(TestWebAssets):
     def test_compilation(self):
         # Compare the compiled css with the reference.
         gen_file = Path(
-            self.temp_path) / 'theme' / 'gen' / 'style.{}.min.css'.format(CSS_HASH)
+            self.temp_path) / 'theme' / '{}.min.css'.format(CSS_HASH)
         self.assertTrue(gen_file.is_file())
 
         with open(gen_file) as css_new:
@@ -79,13 +79,13 @@ class TestWebAssetsRelativeURLS(TestWebAssets):
     def test_template(self):
         # Look in the output files for the link tag.
 
-        css_file = "./theme/gen/style.{0}.min.css".format(CSS_HASH)
+        css_file = "./theme/{}.min.css".format(CSS_HASH)
         html_files = ["index.html", "archives.html", "this-is-a-super-article.html"]
         for f in html_files:
             self.check_link_tag(css_file, Path(self.temp_path) / f)
 
         self.check_link_tag(
-            "../theme/gen/style.{0}.min.css".format(CSS_HASH),
+            "../theme/{}.min.css".format(CSS_HASH),
             Path(self.temp_path) / 'category' / 'yeah.html',
         )
 
@@ -101,7 +101,7 @@ class TestWebAssetsAbsoluteURLS(TestWebAssets):
     def test_absolute_url(self):
         # Look in the output files for the link tag with absolute url.
 
-        css_file = "http://localhost/theme/gen/style.{0}.min.css".format(CSS_HASH)
+        css_file = "http://localhost/theme/{}.min.css".format(CSS_HASH)
         html_files = ["index.html", "archives.html", "this-is-a-super-article.html"]
         for f in html_files:
             self.check_link_tag(css_file, Path(self.temp_path) / f)
