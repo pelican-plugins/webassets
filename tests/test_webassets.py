@@ -11,12 +11,13 @@ import unittest
 
 from pelican import Pelican
 from pelican.settings import read_settings
-from pelican.tests.support import module_exists, mute, skipIfNoExecutable
+from pelican.tests.support import module_exists, mute
 
 HERE = Path(__name__).parent / 'tests'
 THEME_DIR = HERE / 'test_data'
 CSS_REF = open(THEME_DIR / 'static' / 'css' / 'style.min.css').read()
 CSS_HASH = hashlib.md5(CSS_REF.encode()).hexdigest()[0:8]
+
 
 @unittest.skipUnless(module_exists("webassets"), "webassets isn't installed")
 @unittest.skipUnless(module_exists("sass"), "libsass isn't installed")
@@ -49,7 +50,7 @@ class TestWebAssets(unittest.TestCase):
     def check_link_tag(self, css_file, html_file):
         """Check the presence of `css_file` in `html_file`."""
 
-        link_tag = '<link rel="stylesheet" href="{css_file}">'.format(css_file=css_file)
+        link_tag = '<link rel="stylesheet" href="{}">'.format(css_file)
         with open(html_file) as html:
             self.assertRegex(html.read(), link_tag)
 
@@ -65,7 +66,8 @@ class TestWebAssetsRelativeURLS(TestWebAssets):
 
         from webassets.ext.jinja2 import AssetsExtension
 
-        self.assertIn(AssetsExtension, self.settings["JINJA_ENVIRONMENT"]["extensions"])
+        self.assertIn(
+            AssetsExtension, self.settings["JINJA_ENVIRONMENT"]["extensions"])
 
     def test_compilation(self):
         # Compare the compiled css with the reference.
@@ -80,7 +82,9 @@ class TestWebAssetsRelativeURLS(TestWebAssets):
         # Look in the output files for the link tag.
 
         css_file = "./theme/{}.min.css".format(CSS_HASH)
-        html_files = ["index.html", "archives.html", "this-is-a-super-article.html"]
+        html_files = ["index.html", "archives.html",
+                      "this-is-a-super-article.html"]
+
         for f in html_files:
             self.check_link_tag(css_file, Path(self.temp_path) / f)
 
@@ -95,13 +99,15 @@ class TestWebAssetsAbsoluteURLS(TestWebAssets):
 
     def setUp(self):
         TestWebAssets.setUp(
-            self, override={"RELATIVE_URLS": False, "SITEURL": "http://localhost"}
-        )
+            self, override={"RELATIVE_URLS": False,
+                            "SITEURL": "http://localhost"})
 
     def test_absolute_url(self):
         # Look in the output files for the link tag with absolute url.
 
         css_file = "http://localhost/theme/{}.min.css".format(CSS_HASH)
-        html_files = ["index.html", "archives.html", "this-is-a-super-article.html"]
+        html_files = ["index.html", "archives.html",
+                      "this-is-a-super-article.html"]
+
         for f in html_files:
             self.check_link_tag(css_file, Path(self.temp_path) / f)
