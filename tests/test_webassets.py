@@ -4,7 +4,7 @@
 from codecs import open
 import hashlib
 import locale
-import os
+from pathlib import Path
 from shutil import rmtree
 from tempfile import mkdtemp
 import unittest
@@ -13,11 +13,10 @@ from pelican import Pelican
 from pelican.settings import read_settings
 from pelican.tests.support import module_exists, mute, skipIfNoExecutable
 
-CUR_DIR = os.path.dirname(__file__)
-THEME_DIR = os.path.join(CUR_DIR, "test_data")
-CSS_REF = open(os.path.join(THEME_DIR, "static", "css", "style.min.css")).read()
+HERE = Path(__name__).parent / 'tests'
+THEME_DIR = HERE / 'test_data'
+CSS_REF = open(THEME_DIR / 'static' / 'css' / 'style.min.css').read()
 CSS_HASH = hashlib.md5(CSS_REF.encode()).hexdigest()[0:8]
-
 
 @unittest.skipUnless(module_exists("webassets"), "webassets isn't installed")
 @skipIfNoExecutable(["sass", "-v"])
@@ -31,7 +30,7 @@ class TestWebAssets(unittest.TestCase):
         self.temp_path = mkdtemp(prefix="pelicantests.")
         settings = {
             "ASSET_CONFIG": [("sass_bin", "scss")],
-            "PATH": os.path.join(os.path.dirname(CUR_DIR), "test_data", "content"),
+            "PATH": THEME_DIR,
             "OUTPUT_PATH": self.temp_path,
             "PLUGINS": [webassets],
             "THEME": THEME_DIR,
@@ -52,8 +51,8 @@ class TestWebAssets(unittest.TestCase):
         """Check the presence of `css_file` in `html_file`."""
 
         link_tag = '<link rel="stylesheet" href="{css_file}">'.format(css_file=css_file)
-        html = open(html_file).read()
-        self.assertRegexpMatches(html, link_tag)
+        with open(html_file) as html:
+            self.assertRegex(html.read(), link_tag)
 
 
 class TestWebAssetsRelativeURLS(TestWebAssets):
@@ -71,14 +70,12 @@ class TestWebAssetsRelativeURLS(TestWebAssets):
 
     def test_compilation(self):
         # Compare the compiled css with the reference.
+        gen_file = Path(
+            self.temp_path) / 'theme' / 'gen' / 'style.{}.min.css'.format(CSS_HASH)
+        self.assertTrue(gen_file.is_file())
 
-        gen_file = os.path.join(
-            self.temp_path, "theme", "gen", "style.{0}.min.css".format(CSS_HASH)
-        )
-        self.assertTrue(os.path.isfile(gen_file))
-
-        css_new = open(gen_file).read()
-        self.assertEqual(css_new, CSS_REF)
+        with open(gen_file) as css_new:
+            self.assertEqual(css_new.read(), CSS_REF)
 
     def test_template(self):
         # Look in the output files for the link tag.
@@ -86,11 +83,11 @@ class TestWebAssetsRelativeURLS(TestWebAssets):
         css_file = "./theme/gen/style.{0}.min.css".format(CSS_HASH)
         html_files = ["index.html", "archives.html", "this-is-a-super-article.html"]
         for f in html_files:
-            self.check_link_tag(css_file, os.path.join(self.temp_path, f))
+            self.check_link_tag(css_file, Path(self.temp_path) / f)
 
         self.check_link_tag(
             "../theme/gen/style.{0}.min.css".format(CSS_HASH),
-            os.path.join(self.temp_path, "category/yeah.html"),
+            Path(self.temp_path) / 'category' / 'yeah.html',
         )
 
 
@@ -108,4 +105,4 @@ class TestWebAssetsAbsoluteURLS(TestWebAssets):
         css_file = "http://localhost/theme/gen/style.{0}.min.css".format(CSS_HASH)
         html_files = ["index.html", "archives.html", "this-is-a-super-article.html"]
         for f in html_files:
-            self.check_link_tag(css_file, os.path.join(self.temp_path, f))
+            self.check_link_tag(css_file, Path(self.temp_path) / f)
