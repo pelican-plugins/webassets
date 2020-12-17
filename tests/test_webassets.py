@@ -26,7 +26,7 @@ class TestWebAssets(unittest.TestCase):
     """Base class for testing webassets."""
 
     def setUp(self, override=None):
-        import webassets
+        from pelican.plugins import webassets
 
         self.temp_path = mkdtemp(prefix="pelicantests.")
         settings = {
