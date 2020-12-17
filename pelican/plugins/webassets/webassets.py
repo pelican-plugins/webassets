@@ -47,9 +47,22 @@ def create_assets_env(generator):
     assets_destination = os.path.join(generator.output_path, theme_static_dir)
     generator.env.assets_environment = Environment(assets_destination, theme_static_dir)
 
-    if "ASSET_CONFIG" in generator.settings:
-        for item in generator.settings["ASSET_CONFIG"]:
-            generator.env.assets_environment.config[item[0]] = item[1]
+    # TODO: remove deprecated variables in 2022
+    for variable in ['ASSET_CONFIG', 'ASSET_DEBUG', 'ASSET_BUNDLES']:
+        if variable not in generator.settings:
+            continue
+
+        logger.warning(
+            '%s has been deprecated in favor for %s. Please update your '
+            'config file.', variable, variable.replace('ASSET', 'WEBASSETS'))
+
+    # use WEBASSETS_CONFIG over ASSET_CONFIG
+    for key, value in generator.settings.get(
+            'WEBASSETS_CONFIG', generator.settings.get(
+                'ASSET_CONFIG', [])):
+
+        logger.debug('webassets: adding config: \'%s\' -> \'%s\'', key, value)
+        generator.env.assets_environment.config[key] = value
 
     if "ASSET_BUNDLES" in generator.settings:
         for name, args, kwargs in generator.settings["ASSET_BUNDLES"]:
