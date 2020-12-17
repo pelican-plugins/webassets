@@ -68,10 +68,14 @@ def create_assets_env(generator):
         for name, args, kwargs in generator.settings["ASSET_BUNDLES"]:
             generator.env.assets_environment.register(name, *args, **kwargs)
 
-    if "ASSET_DEBUG" in generator.settings:
-        generator.env.assets_environment.debug = generator.settings["ASSET_DEBUG"]
-    elif logging.getLevelName(logger.getEffectiveLevel()) == "DEBUG":
-        generator.env.assets_environment.debug = True
+    # prefer WEBASSETS_DEBUG -> ASSET_DEBUG -> logger.level
+    in_debug = generator.settings.get(
+        'WEBASSETS_DEBUG', generator.settings.get(
+            'ASSET_DEBUG', logger.getEffectiveLevel() <= logging.DEBUG))
+
+    if in_debug is True:
+        logger.debug("webassets: running in DEBUG mode")
+    generator.env.assets_environment.debug = in_debug
 
     for path in generator.settings["THEME_STATIC_PATHS"] + generator.settings.get(
         "ASSET_SOURCE_PATHS", []

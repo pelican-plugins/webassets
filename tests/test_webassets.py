@@ -135,6 +135,16 @@ class TestWebAssetsConfigDeprecation(TestWebAssets):
                 'deprecated in favor for WEBASSETS_CONFIG. Please update your '
                 'config file.', log.output)
 
+    def test_asset_debug_deprication(self):
+        """ensure a deprication WARNING is emitted when using ASSET_DEBUG"""
+        with self.assertLogs(LOGGER_NAME, level='WARNING') as log:
+            super().setUp(override={'ASSET_DEBUG': True})
+
+            self.assertIn(
+                'WARNING:pelican.plugins.webassets.webassets:ASSET_DEBUG has been '
+                'deprecated in favor for WEBASSETS_DEBUG. Please update your '
+                'config file.', log.output)
+
 
 class DummyPlugin():
     """a dummy plugin to get the webassets configuration settings"""
@@ -180,6 +190,33 @@ class TestWebAssetsConfigSettings(TestWebAssets):
         self.assertEqual('some random setting', config['testing_config'],
                          'The testing configuration value was not given '
                          'to the webassets environment')
+
+    def test_webasssets_debug(self):
+        """ensure WEBASSETS_DEBUG can put the webassets module in debug mode"""
+        generator = self.get_generators({'WEBASSETS_DEBUG': True})
+        self.assertTrue(generator.env.assets_environment.debug)
+
+        generator = self.get_generators({'WEBASSETS_DEBUG': False})
+        self.assertFalse(generator.env.assets_environment.debug)
+
+    def test_assset_debug(self):
+        """ensure ASSET_DEBUG can put the webassets module in debug mode"""
+        generator = self.get_generators({'ASSET_DEBUG': True})
+        self.assertTrue(generator.env.assets_environment.debug)
+
+        generator = self.get_generators({'ASSET_DEBUG': False})
+        self.assertFalse(generator.env.assets_environment.debug)
+
+    def test_pelican_debug(self):
+        """if no *_DEBUG setting ensure webassets uses Pelican's DEBUG level"""
+        import logging
+
+        generator = self.get_generators()
+        self.assertFalse(generator.env.assets_environment.debug)
+
+        logging.getLogger('pelican').setLevel(logging.DEBUG)
+        generator = self.get_generators()
+        self.assertTrue(generator.env.assets_environment.debug)
 
 
 class TestDepricationDate(unittest.TestCase):
