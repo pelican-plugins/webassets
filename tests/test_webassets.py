@@ -162,6 +162,16 @@ class TestWebAssetsConfigDeprecation(TestWebAssets):
                 'deprecated in favor for WEBASSETS_BUNDLES. Please update your '
                 'config file.', log.output)
 
+    def test_asset_source_paths_deprication(self):
+        """ensure a deprication WARNING is emitted when using ASSET_SOURCE_PATHS"""
+        with self.assertLogs(LOGGER_NAME, level='WARNING') as log:
+            super().setUp(override={'ASSET_SOURCE_PATHS': ['somewhere']})
+
+            self.assertIn(
+                'WARNING:pelican.plugins.webassets.webassets:ASSET_SOURCE_PATHS has '
+                'been deprecated in favor for WEBASSETS_SOURCE_PATHS. Please update '
+                'your config file.', log.output)
+
 
 class DummyPlugin():
     """a dummy plugin to get the webassets configuration settings"""
@@ -276,6 +286,28 @@ class TestWebAssetsConfigSettings(TestWebAssets):
         # ensure the libsass filter is used
         from webassets.filter.libsass import LibSass
         self.assertIn(LibSass(), test_bundle.filters)
+
+    def test_webassets_source_paths(self):
+        """ensure WEBASSETS_SOURCE_PATHS is passed to the webassets module"""
+        source_paths = ['some', 'random', 'source', 'paths/for/webassets']
+        generator = self.get_generators({
+            'WEBASSETS_SOURCE_PATHS': source_paths})
+
+        paths = generator.env.assets_environment.load_path
+
+        for path in self.settings['THEME_STATIC_PATHS'] + source_paths:
+            self.assertIn(str(Path(generator.theme, path)), paths)
+
+    def test_assets_source_paths(self):
+        """ensure ASSET_SOURCE_PATHS is passed to the webassets module"""
+        source_paths = ['random', 'source', 'paths/for/webassets']
+        generator = self.get_generators({
+            'ASSET_SOURCE_PATHS': source_paths})
+
+        paths = generator.env.assets_environment.load_path
+
+        for path in self.settings['THEME_STATIC_PATHS'] + source_paths:
+            self.assertIn(str(Path(generator.theme, path)), paths)
 
 
 class TestDepricationDate(unittest.TestCase):

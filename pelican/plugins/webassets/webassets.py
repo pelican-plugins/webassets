@@ -48,7 +48,8 @@ def create_assets_env(generator):
     generator.env.assets_environment = Environment(assets_destination, theme_static_dir)
 
     # TODO: remove deprecated variables in 2022
-    for variable in ['ASSET_CONFIG', 'ASSET_DEBUG', 'ASSET_BUNDLES']:
+    for variable in ['ASSET_CONFIG', 'ASSET_DEBUG',
+                     'ASSET_BUNDLES', 'ASSET_SOURCE_PATHS']:
         if variable not in generator.settings:
             continue
 
@@ -81,10 +82,14 @@ def create_assets_env(generator):
         logger.debug("webassets: running in DEBUG mode")
     generator.env.assets_environment.debug = in_debug
 
-    for path in generator.settings["THEME_STATIC_PATHS"] + generator.settings.get(
-        "ASSET_SOURCE_PATHS", []
-    ):
+    # prefer WEBASSETS_SOURCE_PATHS over ASSET_SOURCE_PATHS
+    extra_paths = generator.settings.get(
+        'WEBASSETS_SOURCE_PATHS', generator.settings.get(
+            'ASSET_SOURCE_PATHS', []))
+
+    for path in generator.settings["THEME_STATIC_PATHS"] + extra_paths:
         full_path = os.path.join(generator.theme, path)
+        logger.debug('webassets: using assets in \'%s\'', full_path)
         generator.env.assets_environment.append_path(full_path)
 
 
