@@ -122,8 +122,8 @@ class TestWebAssetsConfigDeprecation(TestWebAssets):
         """
         pass
 
-    def test_asset_config_deprication(self):
-        """ensure a deprication WARNING is emitted when using ASSET_CONFIG"""
+    def test_asset_config_deprecation(self):
+        """ensure a deprecation WARNING is emitted when using ASSET_CONFIG"""
         with self.assertLogs(LOGGER_NAME, level='WARNING') as log:
             super().setUp(override={
                 'ASSET_CONFIG': [('TESTING', 'WEBASSETS_CONFIG')]})
@@ -133,8 +133,8 @@ class TestWebAssetsConfigDeprecation(TestWebAssets):
                 'deprecated in favor for WEBASSETS_CONFIG. Please update your '
                 'config file.', log.output)
 
-    def test_asset_debug_deprication(self):
-        """ensure a deprication WARNING is emitted when using ASSET_DEBUG"""
+    def test_asset_debug_deprecation(self):
+        """ensure a deprecation WARNING is emitted when using ASSET_DEBUG"""
         with self.assertLogs(LOGGER_NAME, level='WARNING') as log:
             super().setUp(override={'ASSET_DEBUG': True})
 
@@ -143,8 +143,8 @@ class TestWebAssetsConfigDeprecation(TestWebAssets):
                 'deprecated in favor for WEBASSETS_DEBUG. Please update your '
                 'config file.', log.output)
 
-    def test_asset_bundles_deprication(self):
-        """ensure a deprication WARNING is emitted when using ASSET_BUNDLES"""
+    def test_asset_bundles_deprecation(self):
+        """ensure a deprecation WARNING is emitted when using ASSET_BUNDLES"""
         with self.assertLogs(LOGGER_NAME, level='WARNING') as log:
             super().setUp(override={
                 'ASSET_BUNDLES': [
@@ -160,8 +160,8 @@ class TestWebAssetsConfigDeprecation(TestWebAssets):
                 'deprecated in favor for WEBASSETS_BUNDLES. Please update your '
                 'config file.', log.output)
 
-    def test_asset_source_paths_deprication(self):
-        """ensure a deprication WARNING is emitted when using ASSET_SOURCE_PATHS"""
+    def test_asset_source_paths_deprecation(self):
+        """ensure a deprecation WARNING is emitted when using ASSET_SOURCE_PATHS"""
         with self.assertLogs(LOGGER_NAME, level='WARNING') as log:
             super().setUp(override={'ASSET_SOURCE_PATHS': ['somewhere']})
 
