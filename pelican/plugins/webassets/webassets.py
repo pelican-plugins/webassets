@@ -104,11 +104,9 @@ def create_assets_env(generator):
 
 def register():
     """Plugin registration."""
-    if webassets:
-        signals.initialized.connect(add_jinja2_ext)
-        signals.generator_init.connect(create_assets_env)
-    else:
-        logger.warning(
-            "`assets` failed to load dependency `webassets`."
-            "`assets` plugin not loaded."
-        )
+    if webassets is None:
+        logger.warning("failed to load 'webassets' dependencies")
+        return
+
+    signals.initialized.connect(add_jinja2_ext)
+    signals.generator_init.connect(create_assets_env)
