@@ -43,7 +43,9 @@ def create_assets_env(generator):
 
     theme_static_dir = generator.settings["THEME_STATIC_DIR"]
     assets_destination = os.path.join(generator.output_path, theme_static_dir)
-    generator.env.assets_environment = Environment(assets_destination, theme_static_dir)
+    generator.env.assets_environment = Environment(
+        assets_destination, theme_static_dir or "."
+    )
 
     # TODO: remove deprecated variables in 2022
     for variable in [

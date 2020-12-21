@@ -308,6 +308,51 @@ class TestWebAssetsConfigSettings(TestWebAssets):
             self.assertIn(str(Path(generator.theme, path)), paths)
 
 
+class TestWebAssetsThemeStaticDir(TestWebAssets):
+    """test if we can handle changes to THEME_STATIC_DIR"""
+
+    def setUp(self):
+        """we'll be running TestWebAssets.setUp() manually in each test"""
+        pass
+
+    def get_generators(self, settings=None):
+        """run pelican with the given settings and return the generators"""
+        from pelican.plugins import webassets
+        test_plugin = DummyPlugin()
+
+        settings = settings or {}
+        settings.update({'PLUGINS': [webassets, test_plugin]})
+        super().setUp(settings)
+
+        return test_plugin.generator
+
+    def check_url(self, settings=None):
+        """helper to do the actual regex match testing"""
+        generator = self.get_generators(settings)
+        env = generator.env.assets_environment
+
+        # if THEME_STATIC_DIR = '' the output from {{SITEURL}}/{{ASSET_URL}}
+        # will contain an extra leading slash, producing broken links
+        # more at: https://github.com/pelican-plugins/webassets/issues/3
+        self.assertNotEqual(env.url, "", "Environment.url cannot be ''")
+
+    def test_default_theme_dir(self):
+        """is the proper url generated when using the default THEME_STATIC_DIR"""
+        self.check_url()
+
+    def test_modified_theme_dir(self):
+        """is the proper url generated when we modify THEME_STATIC_DIR"""
+        self.check_url({
+            "THEME_STATIC_DIR": "t̨͎͙͎̘́̋̃̑͠e̛̝̟͋sț̆ị̈n̹̭̞̪͊͊͋͞g̗̤͒̍",
+        })
+
+    def test_empty_theme_dir(self):
+        """is a proper url generated when THEME_STATIC_DIR is empty"""
+        self.check_url({
+            "THEME_STATIC_DIR": "",
+        })
+
+
 class TestDepricationDate(unittest.TestCase):
     """Is it time to remove the deprecation warnings?"""
 
