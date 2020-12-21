@@ -1,127 +1,189 @@
-# Webassets: A Plugin for Pelican
+# webassets: A Plugin for Pelican
 
 [![Build Status](https://img.shields.io/github/workflow/status/pelican-plugins/webassets/build)](https://github.com/pelican-plugins/webassets/actions)
 [![PyPI Version](https://img.shields.io/pypi/v/pelican-webassets)](https://pypi.org/project/pelican-webassets/)
 ![License](https://img.shields.io/pypi/l/pelican-webassets?color=blue)
 
-Use the [`webassets` module](https://github.com/miracle2k/webassets) to manage assets such as CSS and JS files
+This [pelican plugin](https://github.com/getpelican/pelican/) allows
+you to use the [webassets
+module](https://github.com/miracle2k/webassets) to perform a number of
+useful asset management functions on your website, like:
+
+* CSS minification (`cssmin`, `yui_css`, ...)
+* CSS compiling (`less`, `sass`, ...)
+* JS building (`uglifyjs`, `yui_js`, `closure`, ...)
+
+Some other interesting webassets' abilities include:
+
+* [URL Expiry or
+  "cache-busting"](https://webassets.readthedocs.io/en/latest/expiring.html),
+  allowing you to set the cache headers for your assets long into the
+  future, saving bandwidth and reducing page load-times.
+* a `spritemapper` function to automatically combine multiple icons into
+  one large image with corresponding position slices. More on that
+  [here](https://yostudios.github.io/Spritemapper/)
+* and a `datauri` function to minimize the number of HTTP requests by
+  replacing `url()` references in your stylesheets with internal
+  in-line [data URIs](https://en.wikipedia.org/wiki/Data_URI_scheme)
+
+For the complete list of what webassets can do, checkout the **included
+filters** section in the [webassets
+documentation](http://webassets.readthedocs.org/en/latest/builtin_filters.html).
 
 ## Installation
 
-This plugin can be installed via:
+Getting started with webassets couldn't be easier thanks to `pip`:
 
 ```shell-session
 python -m pip install pelican-webassets
 ```
 
+Next, just enable webassets to your pelican configuration file:
+
+```python
+PLUGINS = [ 'webassets', ]
+```
+
+💡 **Keep in Mind:** Each function you use in your `{% asset filters %}`
+arguments (more on this later) will need to be installed
+separately. For example if you wanted to use the `libsass` filter, you
+will need to `pip install libsass`. You can even [create a custom
+filter](https://webassets.readthedocs.io/en/latest/custom_filters.html)
+if you wanted.
+
 ## Usage
 
-The Webassets module allows you to perform a number of useful asset management
-functions, including:
-
-* CSS minifier (`cssmin`, `yui_css`, ...)
-* CSS compiler (`less`, `sass`, ...)
-* JS minifier (`uglifyjs`, `yui_js`, `closure`, ...)
-
-Others filters include CSS URL rewriting, integration of images in CSS via data
-URIs, and more. Webassets can also append a version identifier to your asset
-URL to convince browsers to download new versions of your assets when you use
-far-future expires headers. Please refer to the [Webassets documentation](http://webassets.readthedocs.org/en/latest/builtin_filters.html) for
-more information.
-
-When used with Pelican, Webassets is configured to process assets in the
-`OUTPUT_PATH/theme` directory. You can use Webassets in your templates by
-including one or more template tags. The Jinja variable `{{ ASSET_URL }}` can
-be used in templates and is relative to the `theme/` url. The
-`{{ ASSET_URL }}` variable should be used in conjunction with the
-`{{ SITEURL }}` variable in order to generate URLs properly. For example:
+With the plugin installed, include one or more `{% assets %}` tags
+into your website's templates to generate everything your webpage will
+need. For example something like this in your template:
 
 ```html+jinja
-{% assets filters="cssmin", output="css/style.min.css", "css/inuit.css", "css/pygment-monokai.css", "css/main.css" %}
-    <link rel="stylesheet" href="{{ SITEURL }}/{{ ASSET_URL }}">
+{% assets filters="libsass,cssmin", output="css/style.min.css", "css/style.scss" %}
+  <link rel="stylesheet" href="{{SITEURL}}/{{ASSET_URL}}">
 {% endassets %}
 ```
 
-... will produce a minified css file with a version identifier that looks like:
-
-```html
-<link href="http://example.com/theme/css/style.min.css?b3a7c807" rel="stylesheet">
-```
-
-These filters can be combined. Here is an example that uses the SASS compiler
-and minifies the output:
+will tell webassets to use `libsass` and `cssmin` to compile and
+minify the `css/style.scss` file in your theme, and save the compiled
+stylesheet as `css/style.min.css` in the output of your finished
+website, along with the `link` element like this in your webpage:
 
 ```html+jinja
-{% assets filters="sass,cssmin", output="css/style.min.css", "css/style.scss" %}
-    <link rel="stylesheet" href="{{ SITEURL }}/{{ ASSET_URL }}">
+<link href="{SITEURL}/{THEME_STATIC_DIR}/css/style.min.css?b3a7c807" rel="stylesheet">
+```
+
+🌠 **The More You Know:** the `ASSET_URL` variable is the concatenation
+of your pelican `THEME_STATIC_DIR` setting, the `output` argument, and
+the "cache-busting" variable we already talked about.
+
+### A JavaScript Example
+
+For another example, we can use webassets' `closure_js` function to combine,
+minify and compress two files in your website's theme, `js/jQuery.js`
+and `js/widgets.js`:
+
+```html+jinja
+{% assets filters="closure_js", output="js/packed.js", "js/jQuery.js", "js/widgets.js" %}
+ <script src="{{SITEURL}}/{{ASSET_URL}}"></script>
 {% endassets %}
 ```
 
-Another example for Javascript:
+The resulting output will be a single `script` tag and its
+corresponding file in your website's generated output:
 
 ```html+jinja
-{% assets filters="uglifyjs", output="js/packed.js", "js/jquery.js", "js/base.js", "js/widgets.js" %}
-    <script src="{{ SITEURL }}/{{ ASSET_URL }}"></script>
-{% endassets %}
+<script src="{SITEURL}/{THEME_STATIC_DIR}/js/packed.js?00703b9d"></script>
 ```
 
-The above will produce a minified JS file:
+## Configuration
 
-```html
-<script src="http://example.com/theme/js/packed.js?00703b9d"></script>
-```
+Being a very small wrapper around the webassets module, there are
+only a few options that you may need.
 
-Pelican's debug mode is propagated to Webassets to disable asset packaging
-and instead work with the uncompressed assets.
+#### WEBASSETS_DEBUG
 
-If you need to create named bundles (for example, if you need to compile SASS
-files before minifying with other CSS files), you can use the `ASSET_BUNDLES`
-variable in your settings file. This is an ordered sequence of 3-tuples, where
-the 3-tuple is defined as `(name, args, kwargs)`. This tuple is passed to the
-[environment's `register()` method](http://webassets.readthedocs.org/en/latest/environment.html#registering-bundles). The following will compile two SCSS files
-into a named bundle, using the `pyscss` filter:
+By default, if pelican is in DEBUG mode (`pelican -D ...`), this
+plugin will put webassets in DEBUG mode, to help you with
+debugging. To override this behavior, set `WEBASSETS_DEBUG = False` to
+always process files regardless of pelican's DEBUG flag, or `True`
+to always force webassets into DEBUG mode.
 
 ```python
-ASSET_BUNDLES = (
-    ("scss", ["colors.scss", "main.scss"], {"filters": "pyscss"}),
-)
+# put webassets into DEBUG mode if pelican is
+WEBASSETS_DEBUG = logger.getEffectiveLevel() <= logging.DEBUG
 ```
 
-Many of Webasset's available compilers have additional configuration options
-(i.e. `Less`, `Sass`, `Stylus`, `Closure_js`).  You can pass these options to
-Webassets using the `ASSET_CONFIG` in your settings file.
+#### WEBASSETS_CONFIG
 
-The following will handle Google Closure's compilation level and locate
-LessCSS's binary:
-
-```python
-ASSET_CONFIG = (
-    ("CLOSURE_COMPRESSOR_OPTIMIZATION", "WHITESPACE_ONLY"),
-    ("LESS_BIN", "lessc.cmd"),
-)
-```
-
-If you wish to place your assets in locations other than the theme output
-directory, you can use `ASSET_SOURCE_PATHS` in your settings file to provide
-webassets with a list of additional directories to search, relative to the
-theme's top-level directory:
+Some webassets filters require extra configuration options to function
+properly. You can use `WEBASSETS_CONFG` to specify these options in a
+list of `(key, value)` tuples that are passed along to the webassets
+environment.
 
 ```python
-ASSET_SOURCE_PATHS = [
-    "vendor/css",
-    "scss",
+WEBASSETS_CONFIG = [
+  ('closure_compressor_optimization', 'ADVANCED_OPTIMIZATIONS'),
+  ('libsass_style', 'compressed')
 ]
+```
+
+#### WEBASSETS_BUNDLES
+
+[webassets
+Bundles](https://webassets.readthedocs.io/en/latest/bundles.html) are
+a convenient way to group a collection of assets together along with
+the information on how to properly process the files. The
+`WEBASSETS_BUNDLES` option allows us to make these Bundles by taking a
+list of `(name, args, kwargs)` arguments which will be passed to the
+webassets environment. 
+
+```python
+WEBASSETS_BUNDLES = (
+     ('my_bundle', ('colors.scss', 'style.scss'),
+     {'output': 'style.min.css', 'filters': ['libsass', 'cssmin']}),
+)
+```
+
+Allowing you to simplify something like this in your website's templates:
+
+```html+jinja
+{% assets filters="libsass,cssmin", output="style.min.css", "colors.scss", "style.scss" %}
+```
+
+into this:
+
+```html+jinja
+{% assets 'my_bundle' %}
+```
+
+#### WEBASSETS_SOURCE_PATHS
+
+If your raw assets are in directories other than your
+`THEME_STATIC_PATHS`, you can supply additional directories to search
+in with `WEBASSETS_SOURCE_PATHS`.
+
+```python
+WEBASSETS_SOURCE_PATHS = ["stylehseets", "javascript"]
 ```
 
 ## Contributing
 
-Contributions are welcome and much appreciated. Every little bit helps. You can contribute by improving the documentation, adding missing features, and fixing bugs. You can also help out by reviewing and commenting on [existing issues][].
+Contributions are welcome and much appreciated. Every little bit
+helps. You can contribute by improving the documentation, adding
+missing features, and fixing bugs. You can also help out by reviewing
+and commenting on [existing issues][].
 
-To start contributing to this plugin, review the [Contributing to Pelican][] documentation, beginning with the **Contributing Code** section.
+To start contributing to this plugin, review the [Contributing to
+Pelican][] documentation, beginning with the **Contributing Code**
+section.
 
 [existing issues]: https://github.com/pelican-plugins/webassets/issues
 [Contributing to Pelican]: https://docs.getpelican.com/en/latest/contribute.html
 
 ## License
 
-This project is licensed under the AGPL-3.0 license.
+This project is licensed under the [AGPL-3.0
+license](https://tldrlegal.com/license/gnu-affero-general-public-license-v3-(agpl-3.0))
+
+![AGPL-3.0](https://img.shields.io/pypi/l/pelican-webassets?color=blue)
+

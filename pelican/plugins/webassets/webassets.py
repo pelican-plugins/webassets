@@ -14,8 +14,6 @@ setting. This requires the use of SITEURL in the templates::
 .. _webassets: https://webassets.readthedocs.org/
 
 """
-from __future__ import unicode_literals
-
 import logging
 import os
 
@@ -47,33 +45,68 @@ def create_assets_env(generator):
     assets_destination = os.path.join(generator.output_path, theme_static_dir)
     generator.env.assets_environment = Environment(assets_destination, theme_static_dir)
 
-    if "ASSET_CONFIG" in generator.settings:
-        for item in generator.settings["ASSET_CONFIG"]:
-            generator.env.assets_environment.config[item[0]] = item[1]
+    # TODO: remove deprecated variables in 2022
+    for variable in [
+        "ASSET_CONFIG",
+        "ASSET_DEBUG",
+        "ASSET_BUNDLES",
+        "ASSET_SOURCE_PATHS",
+    ]:
 
-    if "ASSET_BUNDLES" in generator.settings:
-        for name, args, kwargs in generator.settings["ASSET_BUNDLES"]:
-            generator.env.assets_environment.register(name, *args, **kwargs)
+        if variable not in generator.settings:
+            continue
 
-    if "ASSET_DEBUG" in generator.settings:
-        generator.env.assets_environment.debug = generator.settings["ASSET_DEBUG"]
-    elif logging.getLevelName(logger.getEffectiveLevel()) == "DEBUG":
-        generator.env.assets_environment.debug = True
+        logger.warning(
+            "%s has been deprecated in favor for %s. Please update your "
+            "config file.",
+            variable,
+            variable.replace("ASSET", "WEBASSETS"),
+        )
 
-    for path in generator.settings["THEME_STATIC_PATHS"] + generator.settings.get(
-        "ASSET_SOURCE_PATHS", []
+    # use WEBASSETS_CONFIG over ASSET_CONFIG
+    for key, value in generator.settings.get(
+        "WEBASSETS_CONFIG", generator.settings.get("ASSET_CONFIG", [])
     ):
+
+        logger.debug("webassets: adding config: '%s' -> '%s'", key, value)
+        generator.env.assets_environment.config[key] = value
+
+    # use WEBASSETS_BUNDLES over ASSET_BUNDLES
+    for name, args, kwargs in generator.settings.get(
+        "WEBASSETS_BUNDLES", generator.settings.get("ASSET_BUNDLES", [])
+    ):
+
+        logger.debug("webassets: registering bundle: '%s'", name)
+        generator.env.assets_environment.register(name, *args, **kwargs)
+
+    # prefer WEBASSETS_DEBUG -> ASSET_DEBUG -> logger.level
+    in_debug = generator.settings.get(
+        "WEBASSETS_DEBUG",
+        generator.settings.get(
+            "ASSET_DEBUG", logger.getEffectiveLevel() <= logging.DEBUG
+        ),
+    )
+
+    if in_debug is True:
+        logger.debug("webassets: running in DEBUG mode")
+    generator.env.assets_environment.debug = in_debug
+
+    # prefer WEBASSETS_SOURCE_PATHS over ASSET_SOURCE_PATHS
+    extra_paths = generator.settings.get(
+        "WEBASSETS_SOURCE_PATHS", generator.settings.get("ASSET_SOURCE_PATHS", [])
+    )
+
+    for path in generator.settings["THEME_STATIC_PATHS"] + extra_paths:
         full_path = os.path.join(generator.theme, path)
+        logger.debug("webassets: using assets in '%s'", full_path)
         generator.env.assets_environment.append_path(full_path)
 
 
 def register():
     """Plugin registration."""
-    if webassets:
-        signals.initialized.connect(add_jinja2_ext)
-        signals.generator_init.connect(create_assets_env)
-    else:
-        logger.warning(
-            "`assets` failed to load dependency `webassets`."
-            "`assets` plugin not loaded."
-        )
+    if webassets is None:
+        logger.warning("failed to load 'webassets' dependencies")
+        return
+
+    signals.initialized.connect(add_jinja2_ext)
+    signals.generator_init.connect(create_assets_env)
