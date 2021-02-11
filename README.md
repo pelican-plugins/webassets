@@ -12,16 +12,16 @@ of useful asset management functions on your web site, such as:
 * CSS compiling (`less`, `sass`, ...)
 * JS building (`uglifyjs`, `yui_js`, `closure`, ...)
 
-Some other interesting webassets' abilities include:
+Some other interesting abilities of [webassets][] include:
 
 * [URL Expiry or
   "cache-busting"](https://webassets.readthedocs.io/en/latest/expiring.html),
   allowing you to set the cache headers for your assets long into the
-  future, saving bandwidth and reducing page load-times.
-* a `spritemapper` function to automatically combine multiple icons into
-  one large image with corresponding position slices. More on that
-  [here](https://yostudios.github.io/Spritemapper/)
-* and a `datauri` function to minimize the number of HTTP requests by
+  future, saving bandwidth and reducing page load-times
+* a [`spritemapper`](https://yostudios.github.io/Spritemapper/) function to
+  automatically combine multiple icons into one large image with corresponding
+  position slices
+* a `datauri` function to minimize the number of HTTP requests by
   replacing `url()` references in your stylesheets with internal
   in-line [data URIs](https://en.wikipedia.org/wiki/Data_URI_scheme)
 
@@ -37,11 +37,8 @@ Getting started with [webassets][] couldn't be easier thanks to `pip`:
 python -m pip install pelican-webassets
 ```
 
-Next, enable [webassets][] in your Pelican settings file:
-
-```python
-PLUGINS = ["webassets",]
-```
+For more detailed plugin installation instructions, please refer to the
+[Pelican Plugin Documentation](https://docs.getpelican.com/en/latest/plugins.html).
 
 💡 **Keep in Mind:** Each function you use in your `{% asset filters %}`
 arguments (more on this later) will need to be installed
@@ -65,7 +62,7 @@ need. For example, something like this in your template…
 … will tell [webassets][] to use `libsass` and `cssmin` to compile and
 minify the `css/style.scss` file in your theme, and save the compiled
 stylesheet as `css/style.min.css` in the output of your finished
-website, along with the `link` element like this in your webpage:
+website, along with the `link` element like this in your web page:
 
 ```html+jinja
 <link href="{SITEURL}/{THEME_STATIC_DIR}/css/style.min.css?b3a7c807" rel="stylesheet">
