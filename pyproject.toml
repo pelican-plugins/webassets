@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "pelican-webassets"
 version = "1.0.0"
-description = "Use the webassets module to manage assets such as CSS and JS files"
+description = "Pelican plugin to manage web assets such as CSS and JS files"
 authors = []
 license = "AGPL-3.0"
 readme = "README.md"
@@ -58,7 +58,7 @@ cssmin = "^0.2.0"
 markdown = ["markdown"]
 
 [tool.autopub]
-project-name = "Webassets"
+project-name = "Web Assets"
 git-username = "botpub"
 git-email = "botpub@autopub.rocks"
 
