@@ -11,11 +11,11 @@ from pelican import Pelican, signals
 from pelican.settings import read_settings
 from pelican.tests.support import module_exists, mute
 
-HERE = Path(__name__).parent / 'tests'
-THEME_DIR = HERE / 'test_data'
-CSS_REF = open(THEME_DIR / 'static' / 'css' / 'style.min.css').read()
+HERE = Path(__name__).parent / "tests"
+THEME_DIR = HERE / "test_data"
+CSS_REF = open(THEME_DIR / "static" / "css" / "style.min.css").read()
 CSS_HASH = hashlib.md5(CSS_REF.encode()).hexdigest()[0:8]
-LOGGER_NAME = 'pelican.plugins.webassets'
+LOGGER_NAME = "pelican.plugins.webassets"
 
 
 @unittest.skipUnless(module_exists("webassets"), "webassets isn't installed")
@@ -28,7 +28,7 @@ class TestWebAssets(unittest.TestCase):
 
         self.temp_path = mkdtemp(prefix="pelicantests.")
         settings = {
-            "WEBASSETS_CONFIG": [('libsass_style', 'compressed')],
+            "WEBASSETS_CONFIG": [("libsass_style", "compressed")],
             "PATH": THEME_DIR,
             "OUTPUT_PATH": self.temp_path,
             "PLUGINS": [webassets],
@@ -65,13 +65,11 @@ class TestWebAssetsRelativeURLS(TestWebAssets):
 
         from webassets.ext.jinja2 import AssetsExtension
 
-        self.assertIn(
-            AssetsExtension, self.settings["JINJA_ENVIRONMENT"]["extensions"])
+        self.assertIn(AssetsExtension, self.settings["JINJA_ENVIRONMENT"]["extensions"])
 
     def test_compilation(self):
         # Compare the compiled css with the reference.
-        gen_file = Path(
-            self.temp_path) / 'theme' / '{}.min.css'.format(CSS_HASH)
+        gen_file = Path(self.temp_path) / "theme" / "{}.min.css".format(CSS_HASH)
         self.assertTrue(gen_file.is_file())
 
         with open(gen_file) as css_new:
@@ -81,15 +79,14 @@ class TestWebAssetsRelativeURLS(TestWebAssets):
         # Look in the output files for the link tag.
 
         css_file = "./theme/{}.min.css".format(CSS_HASH)
-        html_files = ["index.html", "archives.html",
-                      "this-is-a-super-article.html"]
+        html_files = ["index.html", "archives.html", "this-is-a-super-article.html"]
 
         for f in html_files:
             self.check_link_tag(css_file, Path(self.temp_path) / f)
 
         self.check_link_tag(
             "../theme/{}.min.css".format(CSS_HASH),
-            Path(self.temp_path) / 'category' / 'yeah.html',
+            Path(self.temp_path) / "category" / "yeah.html",
         )
 
 
@@ -98,15 +95,14 @@ class TestWebAssetsAbsoluteURLS(TestWebAssets):
 
     def setUp(self):
         TestWebAssets.setUp(
-            self, override={"RELATIVE_URLS": False,
-                            "SITEURL": "http://localhost"})
+            self, override={"RELATIVE_URLS": False, "SITEURL": "http://localhost"}
+        )
 
     def test_absolute_url(self):
         # Look in the output files for the link tag with absolute url.
 
         css_file = "http://localhost/theme/{}.min.css".format(CSS_HASH)
-        html_files = ["index.html", "archives.html",
-                      "this-is-a-super-article.html"]
+        html_files = ["index.html", "archives.html", "this-is-a-super-article.html"]
 
         for f in html_files:
             self.check_link_tag(css_file, Path(self.temp_path) / f)
@@ -124,59 +120,70 @@ class TestWebAssetsConfigDeprecation(TestWebAssets):
 
     def test_asset_config_deprecation(self):
         """ensure a deprecation WARNING is emitted when using ASSET_CONFIG"""
-        with self.assertLogs(LOGGER_NAME, level='WARNING') as log:
-            super().setUp(override={
-                'ASSET_CONFIG': [('TESTING', 'WEBASSETS_CONFIG')]})
+        with self.assertLogs(LOGGER_NAME, level="WARNING") as log:
+            super().setUp(override={"ASSET_CONFIG": [("TESTING", "WEBASSETS_CONFIG")]})
 
             self.assertIn(
-                'WARNING:pelican.plugins.webassets.webassets:ASSET_CONFIG has been '
-                'deprecated in favor for WEBASSETS_CONFIG. Please update your '
-                'config file.', log.output)
+                "WARNING:pelican.plugins.webassets.webassets:ASSET_CONFIG has been "
+                "deprecated in favor for WEBASSETS_CONFIG. Please update your "
+                "config file.",
+                log.output,
+            )
 
     def test_asset_debug_deprecation(self):
         """ensure a deprecation WARNING is emitted when using ASSET_DEBUG"""
-        with self.assertLogs(LOGGER_NAME, level='WARNING') as log:
-            super().setUp(override={'ASSET_DEBUG': True})
+        with self.assertLogs(LOGGER_NAME, level="WARNING") as log:
+            super().setUp(override={"ASSET_DEBUG": True})
 
             self.assertIn(
-                'WARNING:pelican.plugins.webassets.webassets:ASSET_DEBUG has been '
-                'deprecated in favor for WEBASSETS_DEBUG. Please update your '
-                'config file.', log.output)
+                "WARNING:pelican.plugins.webassets.webassets:ASSET_DEBUG has been "
+                "deprecated in favor for WEBASSETS_DEBUG. Please update your "
+                "config file.",
+                log.output,
+            )
 
     def test_asset_bundles_deprecation(self):
         """ensure a deprecation WARNING is emitted when using ASSET_BUNDLES"""
-        with self.assertLogs(LOGGER_NAME, level='WARNING') as log:
-            super().setUp(override={
-                'ASSET_BUNDLES': [
-                    ('bundle_name', (
-                        'arguments',
-                    ), {
-                        'output': 'bundle_output',
-                        'filters': ['libsass']})
-                ]})
+        with self.assertLogs(LOGGER_NAME, level="WARNING") as log:
+            super().setUp(
+                override={
+                    "ASSET_BUNDLES": [
+                        (
+                            "bundle_name",
+                            ("arguments",),
+                            {"output": "bundle_output", "filters": ["libsass"]},
+                        )
+                    ]
+                }
+            )
 
             self.assertIn(
-                'WARNING:pelican.plugins.webassets.webassets:ASSET_BUNDLES has been '
-                'deprecated in favor for WEBASSETS_BUNDLES. Please update your '
-                'config file.', log.output)
+                "WARNING:pelican.plugins.webassets.webassets:ASSET_BUNDLES has been "
+                "deprecated in favor for WEBASSETS_BUNDLES. Please update your "
+                "config file.",
+                log.output,
+            )
 
     def test_asset_source_paths_deprecation(self):
         """ensure a deprecation WARNING is emitted when using ASSET_SOURCE_PATHS"""
-        with self.assertLogs(LOGGER_NAME, level='WARNING') as log:
-            super().setUp(override={'ASSET_SOURCE_PATHS': ['somewhere']})
+        with self.assertLogs(LOGGER_NAME, level="WARNING") as log:
+            super().setUp(override={"ASSET_SOURCE_PATHS": ["somewhere"]})
 
             self.assertIn(
-                'WARNING:pelican.plugins.webassets.webassets:ASSET_SOURCE_PATHS has '
-                'been deprecated in favor for WEBASSETS_SOURCE_PATHS. Please update '
-                'your config file.', log.output)
+                "WARNING:pelican.plugins.webassets.webassets:ASSET_SOURCE_PATHS has "
+                "been deprecated in favor for WEBASSETS_SOURCE_PATHS. Please update "
+                "your config file.",
+                log.output,
+            )
 
 
-class DummyPlugin():
+class DummyPlugin:
     """a dummy plugin to get the webassets configuration settings"""
-    __name__ = 'webassets.dummy.plugin'
+
+    __name__ = "webassets.dummy.plugin"
 
     def article_generator_init(self, generator):
-        print('called')
+        print("called")
         self.generator = generator
 
     def register(self):
@@ -193,43 +200,55 @@ class TestWebAssetsConfigSettings(TestWebAssets):
     def get_generators(self, settings=None):
         """run pelican with the given settings and return the generators"""
         from pelican.plugins import webassets
+
         test_plugin = DummyPlugin()
 
         settings = settings or {}
-        settings.update({'PLUGINS': [webassets, test_plugin]})
+        settings.update({"PLUGINS": [webassets, test_plugin]})
         super().setUp(settings)
 
         return test_plugin.generator
 
     def test_webassets_config(self):
         """ensure configuration settings are passed to the webassets module"""
-        generator = self.get_generators({
-            'WEBASSETS_CONFIG': [
-                ('libsass_style', 'compressed'),
-                ('testing_config', 'some random setting')]})
+        generator = self.get_generators(
+            {
+                "WEBASSETS_CONFIG": [
+                    ("libsass_style", "compressed"),
+                    ("testing_config", "some random setting"),
+                ]
+            }
+        )
 
         config = generator.env.assets_environment.config
-        self.assertIn('testing_config', config, 'The testing configuration '
-                      'setting was not given to the webassets environment')
+        self.assertIn(
+            "testing_config",
+            config,
+            "The testing configuration "
+            "setting was not given to the webassets environment",
+        )
 
-        self.assertEqual('some random setting', config['testing_config'],
-                         'The testing configuration value was not given '
-                         'to the webassets environment')
+        self.assertEqual(
+            "some random setting",
+            config["testing_config"],
+            "The testing configuration value was not given "
+            "to the webassets environment",
+        )
 
     def test_webasssets_debug(self):
         """ensure WEBASSETS_DEBUG can put the webassets module in debug mode"""
-        generator = self.get_generators({'WEBASSETS_DEBUG': True})
+        generator = self.get_generators({"WEBASSETS_DEBUG": True})
         self.assertTrue(generator.env.assets_environment.debug)
 
-        generator = self.get_generators({'WEBASSETS_DEBUG': False})
+        generator = self.get_generators({"WEBASSETS_DEBUG": False})
         self.assertFalse(generator.env.assets_environment.debug)
 
     def test_assset_debug(self):
         """ensure ASSET_DEBUG can put the webassets module in debug mode"""
-        generator = self.get_generators({'ASSET_DEBUG': True})
+        generator = self.get_generators({"ASSET_DEBUG": True})
         self.assertTrue(generator.env.assets_environment.debug)
 
-        generator = self.get_generators({'ASSET_DEBUG': False})
+        generator = self.get_generators({"ASSET_DEBUG": False})
         self.assertFalse(generator.env.assets_environment.debug)
 
     def test_pelican_debug(self):
@@ -239,17 +258,18 @@ class TestWebAssetsConfigSettings(TestWebAssets):
         generator = self.get_generators()
         self.assertFalse(generator.env.assets_environment.debug)
 
-        logging.getLogger('pelican').setLevel(logging.DEBUG)
+        logging.getLogger("pelican").setLevel(logging.DEBUG)
         generator = self.get_generators()
         self.assertTrue(generator.env.assets_environment.debug)
 
     def test_webassets_bundles(self):
         """ensure webassets.Bundles are passed to the webassets module"""
-        bundle_name = 'test_bundle_name'
-        bundle_args = ('test', 'arguments', 'for', 'webassets')
-        bundle_kwargs = {'output': 'test_bundle_output', 'filters': ['libsass']}
-        generator = self.get_generators({
-            'WEBASSETS_BUNDLES': [(bundle_name, bundle_args, bundle_kwargs)]})
+        bundle_name = "test_bundle_name"
+        bundle_args = ("test", "arguments", "for", "webassets")
+        bundle_kwargs = {"output": "test_bundle_output", "filters": ["libsass"]}
+        generator = self.get_generators(
+            {"WEBASSETS_BUNDLES": [(bundle_name, bundle_args, bundle_kwargs)]}
+        )
 
         ## TODO: Super Hacky
         bundles = generator.env.assets_environment._named_bundles
@@ -262,15 +282,17 @@ class TestWebAssetsConfigSettings(TestWebAssets):
 
         # ensure the libsass filter is used
         from webassets.filter.libsass import LibSass
+
         self.assertIn(LibSass(), test_bundle.filters)
 
     def test_asset_bundles(self):
         """ensure ASSET_BUNDLES are passed to the webassets module"""
-        bundle_name = 'asset_test_bundle_name'
-        bundle_args = ('asset', 'arguments', 'for', 'webassets')
-        bundle_kwargs = {'output': 'asset_bundle_output', 'filters': ['libsass']}
-        generator = self.get_generators({
-            'ASSET_BUNDLES': [(bundle_name, bundle_args, bundle_kwargs)]})
+        bundle_name = "asset_test_bundle_name"
+        bundle_args = ("asset", "arguments", "for", "webassets")
+        bundle_kwargs = {"output": "asset_bundle_output", "filters": ["libsass"]}
+        generator = self.get_generators(
+            {"ASSET_BUNDLES": [(bundle_name, bundle_args, bundle_kwargs)]}
+        )
 
         ## TODO: Super Hacky
         bundles = generator.env.assets_environment._named_bundles
@@ -283,28 +305,27 @@ class TestWebAssetsConfigSettings(TestWebAssets):
 
         # ensure the libsass filter is used
         from webassets.filter.libsass import LibSass
+
         self.assertIn(LibSass(), test_bundle.filters)
 
     def test_webassets_source_paths(self):
         """ensure WEBASSETS_SOURCE_PATHS is passed to the webassets module"""
-        source_paths = ['some', 'random', 'source', 'paths/for/webassets']
-        generator = self.get_generators({
-            'WEBASSETS_SOURCE_PATHS': source_paths})
+        source_paths = ["some", "random", "source", "paths/for/webassets"]
+        generator = self.get_generators({"WEBASSETS_SOURCE_PATHS": source_paths})
 
         paths = generator.env.assets_environment.load_path
 
-        for path in self.settings['THEME_STATIC_PATHS'] + source_paths:
+        for path in self.settings["THEME_STATIC_PATHS"] + source_paths:
             self.assertIn(str(Path(generator.theme, path)), paths)
 
     def test_assets_source_paths(self):
         """ensure ASSET_SOURCE_PATHS is passed to the webassets module"""
-        source_paths = ['random', 'source', 'paths/for/webassets']
-        generator = self.get_generators({
-            'ASSET_SOURCE_PATHS': source_paths})
+        source_paths = ["random", "source", "paths/for/webassets"]
+        generator = self.get_generators({"ASSET_SOURCE_PATHS": source_paths})
 
         paths = generator.env.assets_environment.load_path
 
-        for path in self.settings['THEME_STATIC_PATHS'] + source_paths:
+        for path in self.settings["THEME_STATIC_PATHS"] + source_paths:
             self.assertIn(str(Path(generator.theme, path)), paths)
 
 
@@ -318,10 +339,11 @@ class TestWebAssetsThemeStaticDir(TestWebAssets):
     def get_generators(self, settings=None):
         """run pelican with the given settings and return the generators"""
         from pelican.plugins import webassets
+
         test_plugin = DummyPlugin()
 
         settings = settings or {}
-        settings.update({'PLUGINS': [webassets, test_plugin]})
+        settings.update({"PLUGINS": [webassets, test_plugin]})
         super().setUp(settings)
 
         return test_plugin.generator
@@ -342,15 +364,19 @@ class TestWebAssetsThemeStaticDir(TestWebAssets):
 
     def test_modified_theme_dir(self):
         """is the proper url generated when we modify THEME_STATIC_DIR"""
-        self.check_url({
-            "THEME_STATIC_DIR": "t̨͎͙͎̘́̋̃̑͠e̛̝̟͋sț̆ị̈n̹̭̞̪͊͊͋͞g̗̤͒̍",
-        })
+        self.check_url(
+            {
+                "THEME_STATIC_DIR": "t̨͎͙͎̘́̋̃̑͠e̛̝̟͋sț̆ị̈n̹̭̞̪͊͊͋͞g̗̤͒̍",
+            }
+        )
 
     def test_empty_theme_dir(self):
         """is a proper url generated when THEME_STATIC_DIR is empty"""
-        self.check_url({
-            "THEME_STATIC_DIR": "",
-        })
+        self.check_url(
+            {
+                "THEME_STATIC_DIR": "",
+            }
+        )
 
 
 class TestDepricationDate(unittest.TestCase):
@@ -359,7 +385,10 @@ class TestDepricationDate(unittest.TestCase):
     def test_after_2022(self):
         """ensure the next person must remove the deprecation warnings after 2022"""
         from datetime import datetime
-        self.assertTrue(datetime.now().year < 2022,
-                        'After 2 years, in the year 2022, we should remove '
-                        'support and deprecation warnings for the ASSET_* '
-                        'configuration settings')
+
+        self.assertTrue(
+            datetime.now().year < 2022,
+            "After 2 years, in the year 2022, we should remove "
+            "support and deprecation warnings for the ASSET_* "
+            "configuration settings",
+        )
