@@ -135,7 +135,7 @@ list of `(name, args, kwargs)` arguments that will be passed to the
 ```python
 WEBASSETS_BUNDLES = (
      ("my_bundle", ("colors.scss", "style.scss"),
-     {"output': "style.min.css", "filters": ["libsass", "cssmin"]}),
+     {"output": "style.min.css", "filters": ["libsass", "cssmin"]}),
 )
 ```
 
