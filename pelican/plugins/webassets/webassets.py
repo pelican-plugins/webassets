@@ -54,7 +54,6 @@ def create_assets_env(generator):
         "ASSET_BUNDLES",
         "ASSET_SOURCE_PATHS",
     ]:
-
         if variable not in generator.settings:
             continue
 
@@ -69,7 +68,6 @@ def create_assets_env(generator):
     for key, value in generator.settings.get(
         "WEBASSETS_CONFIG", generator.settings.get("ASSET_CONFIG", [])
     ):
-
         logger.debug("webassets: adding config: '%s' -> '%s'", key, value)
         generator.env.assets_environment.config[key] = value
 
@@ -77,7 +75,6 @@ def create_assets_env(generator):
     for name, args, kwargs in generator.settings.get(
         "WEBASSETS_BUNDLES", generator.settings.get("ASSET_BUNDLES", [])
     ):
-
         logger.debug("webassets: registering bundle: '%s'", name)
         generator.env.assets_environment.register(name, *args, **kwargs)
 
