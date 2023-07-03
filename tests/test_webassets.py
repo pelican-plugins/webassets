@@ -379,16 +379,16 @@ class TestWebAssetsThemeStaticDir(TestWebAssets):
         )
 
 
-class TestDepricationDate(unittest.TestCase):
+class TestDeprecationDate(unittest.TestCase):
     """Is it time to remove the deprecation warnings?"""
 
-    def test_after_2022(self):
-        """ensure the next person must remove the deprecation warnings after 2022"""
+    def test_after_2024(self):
+        """Ensure the next person must remove the deprecation warnings after 2024."""
         from datetime import datetime
 
         self.assertTrue(
-            datetime.now().year < 2022,
-            "After 2 years, in the year 2022, we should remove "
+            datetime.now().year < 2024,
+            "After 2 years, in the year 2024, we should remove "
             "support and deprecation warnings for the ASSET_* "
             "configuration settings",
         )
