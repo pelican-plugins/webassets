@@ -1,6 +1,6 @@
 # Web Assets: A Plugin for Pelican
 
-[![Build Status](https://img.shields.io/github/workflow/status/pelican-plugins/webassets/build)](https://github.com/pelican-plugins/webassets/actions)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/pelican-plugins/webassets/main.yml?branch=main)](https://github.com/pelican-plugins/webassets/actions)
 [![PyPI Version](https://img.shields.io/pypi/v/pelican-webassets)](https://pypi.org/project/pelican-webassets/)
 ![License](https://img.shields.io/pypi/l/pelican-webassets?color=blue)
 
