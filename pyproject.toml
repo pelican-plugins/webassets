@@ -37,7 +37,6 @@ classifiers = [
 python = ">=3.7,<4.0"
 pelican = ">=4.5"
 markdown = {version = ">=3.2", optional = true}
-webassets = "^2.0"
 
 [tool.poetry.group.dev.dependencies]
 cssmin = "^0.2.0"
