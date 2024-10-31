@@ -4,8 +4,8 @@ try:
     import json
 except ImportError:
     import simplejson as json
-from webassets.filter import Filter
-from webassets.utils import common_path_prefix
+from pelican.plugins.webassets.vendor.webassets.filter import Filter
+from pelican.plugins.webassets.vendor.webassets.utils import common_path_prefix
 
 
 __all__ = ('JST',)

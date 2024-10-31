@@ -1,5 +1,5 @@
 import re
-from webassets.filter import (
+from pelican.plugins.webassets.vendor.webassets.filter import (
     Filter,
     register_filter
 )

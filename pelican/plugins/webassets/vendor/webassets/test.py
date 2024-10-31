@@ -11,9 +11,9 @@ import os
 from os import path
 import time
 
-from webassets import Environment, Bundle
-from webassets.six.moves import map
-from webassets.six.moves import zip
+from pelican.plugins.webassets.vendor.webassets import Environment, Bundle
+from pelican.plugins.webassets.vendor.webassets.six.moves import map
+from pelican.plugins.webassets.vendor.webassets.six.moves import zip
 
 
 __all__ = ('TempDirHelper', 'TempEnvironmentHelper',)

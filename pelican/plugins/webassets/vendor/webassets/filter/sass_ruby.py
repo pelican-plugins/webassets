@@ -1,8 +1,8 @@
 from __future__ import print_function
 import os, subprocess
 
-from webassets.filter import ExternalTool
-from webassets.cache import FilesystemCache
+from pelican.plugins.webassets.vendor.webassets.filter import ExternalTool
+from pelican.plugins.webassets.vendor.webassets.cache import FilesystemCache
 
 
 __all__ = ('RubySass', 'RubySCSS')
@@ -31,7 +31,7 @@ class RubySass(ExternalTool):
 
     To use Sass as an output filter::
 
-        from webassets.filter import get_filter
+        from pelican.plugins.webassets.vendor.webassets.filter import get_filter
         sass = get_filter('sass', as_output=True)
         Bundle(...., filters=(sass,))
 

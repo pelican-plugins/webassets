@@ -1,7 +1,7 @@
 import os
 import subprocess
 
-from webassets.exceptions import FilterError
+from pelican.plugins.webassets.vendor.webassets.exceptions import FilterError
 
 from .sass import Sass
 

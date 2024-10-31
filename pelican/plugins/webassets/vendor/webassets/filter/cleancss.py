@@ -1,7 +1,7 @@
 import os
 from subprocess import PIPE, Popen
 
-from webassets.filter import ExternalTool
+from pelican.plugins.webassets.vendor.webassets.filter import ExternalTool
 
 __all__ = ('CleanCSS',)
 

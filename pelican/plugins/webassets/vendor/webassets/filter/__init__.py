@@ -10,16 +10,16 @@ import inspect
 import shlex
 import tempfile
 import pkgutil
-from webassets import six
-from webassets.six.moves import map
-from webassets.six.moves import zip
+from pelican.plugins.webassets.vendor.webassets import six
+from pelican.plugins.webassets.vendor.webassets.six.moves import map
+from pelican.plugins.webassets.vendor.webassets.six.moves import zip
 try:
     frozenset
 except NameError:
     from sets import ImmutableSet as frozenset
-from webassets.exceptions import FilterError
-from webassets.importlib import import_module
-from webassets.utils import hash_func
+from pelican.plugins.webassets.vendor.webassets.exceptions import FilterError
+from pelican.plugins.webassets.vendor.webassets.importlib import import_module
+from pelican.plugins.webassets.vendor.webassets.utils import hash_func
 
 
 __all__ = ('Filter', 'CallableFilter', 'get_filter', 'register_filter',

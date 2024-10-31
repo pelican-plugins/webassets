@@ -11,8 +11,8 @@ except ImportError:
     from urllib2 import HTTPError
 import logging
 from io import open
-from webassets import six
-from webassets.six.moves import filter
+from pelican.plugins.webassets.vendor.webassets import six
+from pelican.plugins.webassets.vendor.webassets.six.moves import filter
 
 from .utils import cmp_debug_levels, StringIO, hash_func
 

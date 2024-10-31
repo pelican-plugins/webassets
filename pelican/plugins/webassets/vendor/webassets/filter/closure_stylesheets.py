@@ -11,7 +11,7 @@ environment variable to run the ``.jar`` file, or will otherwise
 assume that ``java`` is on the system path.
 """
 
-from webassets.filter import JavaTool
+from pelican.plugins.webassets.vendor.webassets.filter import JavaTool
 
 
 __all__ = ['ClosureStylesheetsCompiler', 'ClosureStylesheetsMinifier']

@@ -1,9 +1,9 @@
 from base64 import b64encode
 import mimetypes
 import os
-from webassets.utils import urlparse
+from pelican.plugins.webassets.vendor.webassets.utils import urlparse
 
-from webassets.filter.cssrewrite.base import CSSUrlRewriter
+from pelican.plugins.webassets.vendor.webassets.filter.cssrewrite.base import CSSUrlRewriter
 
 
 __all__ = ('CSSDataUri',)

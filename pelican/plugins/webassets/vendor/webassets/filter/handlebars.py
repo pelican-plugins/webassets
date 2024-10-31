@@ -2,8 +2,8 @@ import subprocess
 import os
 from os import path
 
-from webassets.exceptions import FilterError
-from webassets.filter.jst import JSTemplateFilter
+from pelican.plugins.webassets.vendor.webassets.exceptions import FilterError
+from pelican.plugins.webassets.vendor.webassets.filter.jst import JSTemplateFilter
 
 
 __all__ = ('Handlebars',)

@@ -4,9 +4,9 @@ import warnings
 import jinja2
 from jinja2.ext import Extension
 from jinja2 import nodes
-from webassets import Bundle
-from webassets.loaders import GlobLoader, LoaderError
-from webassets.exceptions import ImminentDeprecationWarning
+from pelican.plugins.webassets.vendor.webassets import Bundle
+from pelican.plugins.webassets.vendor.webassets.loaders import GlobLoader, LoaderError
+from pelican.plugins.webassets.vendor.webassets.exceptions import ImminentDeprecationWarning
 
 
 __all__ = ('assets', 'Jinja2Loader',)

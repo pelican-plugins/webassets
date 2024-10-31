@@ -18,10 +18,10 @@ from os import path
 import errno
 import tempfile
 import warnings
-from webassets import six
-from webassets.merge import BaseHunk
-from webassets.filter import Filter, freezedicts
-from webassets.utils import md5_constructor, pickle
+from pelican.plugins.webassets.vendor.webassets import six
+from pelican.plugins.webassets.vendor.webassets.merge import BaseHunk
+from pelican.plugins.webassets.vendor.webassets.filter import Filter, freezedicts
+from pelican.plugins.webassets.vendor.webassets.utils import md5_constructor, pickle
 import types
 
 

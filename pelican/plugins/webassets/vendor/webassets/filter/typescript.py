@@ -3,8 +3,8 @@ import subprocess
 import tempfile
 from io import open   # Give 2 and 3 use same newline behaviour.
 
-from webassets.filter import Filter
-from webassets.exceptions import FilterError
+from pelican.plugins.webassets.vendor.webassets.filter import Filter
+from pelican.plugins.webassets.vendor.webassets.exceptions import FilterError
 
 
 __all__ = ('TypeScript',)

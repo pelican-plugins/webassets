@@ -26,11 +26,11 @@ the cache is a superior solution for getting essentially the same speed
 increase as using the hash to reliably determine which bundles to skip.
 """
 
-from webassets import six
-from webassets.six.moves import map
-from webassets.six.moves import zip
-from webassets.exceptions import BundleError, BuildError
-from webassets.utils import RegistryMetaclass, is_url, hash_func
+from pelican.plugins.webassets.vendor.webassets import six
+from pelican.plugins.webassets.vendor.webassets.six.moves import map
+from pelican.plugins.webassets.vendor.webassets.six.moves import zip
+from pelican.plugins.webassets.vendor.webassets.exceptions import BundleError, BuildError
+from pelican.plugins.webassets.vendor.webassets.utils import RegistryMetaclass, is_url, hash_func
 
 
 __all__ = ('get_updater', 'SKIP_CACHE',
@@ -116,7 +116,7 @@ class TimestampUpdater(BundleDefUpdater):
 
     def check_timestamps(self, bundle, ctx, o_modified=None):
         from .bundle import Bundle
-        from webassets.version import TimestampVersion
+        from pelican.plugins.webassets.vendor.webassets.version import TimestampVersion
 
         if not o_modified:
             try:
@@ -146,7 +146,7 @@ class TimestampUpdater(BundleDefUpdater):
        # Recurse through the bundle hierarchy. Check the timestamp of all
         # the bundle source files, as well as any additional
         # dependencies that we are supposed to watch.
-        from webassets.bundle import wrap
+        from pelican.plugins.webassets.vendor.webassets.bundle import wrap
         for iterator, result in (
             (lambda e: map(lambda s: s[1], bundle.resolve_contents(e)), True),
             (bundle.resolve_depends, SKIP_CACHE)

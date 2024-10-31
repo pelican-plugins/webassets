@@ -32,10 +32,10 @@ import tempfile
 import shutil
 import subprocess
 from io import open
-from webassets import six
+from pelican.plugins.webassets.vendor.webassets import six
 
-from webassets.exceptions import FilterError
-from webassets.filter import Filter, option
+from pelican.plugins.webassets.vendor.webassets.exceptions import FilterError
+from pelican.plugins.webassets.vendor.webassets.filter import Filter, option
 
 
 __all__ = ('Compass',)

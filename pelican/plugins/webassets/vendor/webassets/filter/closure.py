@@ -31,7 +31,7 @@ CLOSURE_EXTRA_ARGS
 """
 
 from __future__ import absolute_import
-from webassets.filter import JavaTool
+from pelican.plugins.webassets.vendor.webassets.filter import JavaTool
 
 
 __all__ = ('ClosureJS',)

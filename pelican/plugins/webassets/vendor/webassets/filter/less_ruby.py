@@ -2,8 +2,8 @@ import time
 import os, subprocess
 import tempfile
 
-from webassets.filter import Filter
-from webassets.exceptions import FilterError
+from pelican.plugins.webassets.vendor.webassets.filter import Filter
+from pelican.plugins.webassets.vendor.webassets.exceptions import FilterError
 
 
 __all__ = ('Less',)

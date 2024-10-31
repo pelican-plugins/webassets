@@ -1,4 +1,4 @@
-from webassets.filter import ExternalTool
+from pelican.plugins.webassets.vendor.webassets.filter import ExternalTool
 
 
 class Babel(ExternalTool):

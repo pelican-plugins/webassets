@@ -1,9 +1,9 @@
 from contextlib import contextmanager
 import os
 from os import path
-from webassets import six
-from webassets.six.moves import map
-from webassets.six.moves import zip
+from pelican.plugins.webassets.vendor.webassets import six
+from pelican.plugins.webassets.vendor.webassets.six.moves import map
+from pelican.plugins.webassets.vendor.webassets.six.moves import zip
 
 from .filter import get_filter
 from .merge import (FileHunk, UrlHunk, FilterTool, merge, merge_filters,

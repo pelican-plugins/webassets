@@ -1,7 +1,7 @@
 from __future__ import with_statement
 
-from webassets.filter import ExternalTool
-from webassets.utils import working_directory
+from pelican.plugins.webassets.vendor.webassets.filter import ExternalTool
+from pelican.plugins.webassets.vendor.webassets.utils import working_directory
 
 
 class PostCSS(ExternalTool):

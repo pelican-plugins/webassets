@@ -1,7 +1,7 @@
 import os
 from os.path import join
-from webassets.utils import common_path_prefix
-from webassets.utils import urlparse
+from pelican.plugins.webassets.vendor.webassets.utils import common_path_prefix
+from pelican.plugins.webassets.vendor.webassets.utils import urlparse
 from . import urlpath
 try:
     from collections import OrderedDict

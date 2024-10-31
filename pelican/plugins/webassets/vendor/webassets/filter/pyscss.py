@@ -1,7 +1,7 @@
 import os
 
-from webassets.filter import Filter
-from webassets.utils import working_directory
+from pelican.plugins.webassets.vendor.webassets.filter import Filter
+from pelican.plugins.webassets.vendor.webassets.utils import working_directory
 
 
 __all__ = ('PyScss',)

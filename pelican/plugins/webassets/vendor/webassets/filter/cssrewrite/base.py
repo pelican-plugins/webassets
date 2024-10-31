@@ -1,8 +1,8 @@
 import os
 import re
 from os.path import join, normpath
-from webassets.filter import Filter
-from webassets.utils import common_path_prefix
+from pelican.plugins.webassets.vendor.webassets.filter import Filter
+from pelican.plugins.webassets.vendor.webassets.utils import common_path_prefix
 
 
 __all__ = ()

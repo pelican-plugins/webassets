@@ -3,7 +3,7 @@ from __future__ import with_statement
 import shlex
 from os import path, getcwd
 
-from webassets.filter import ExternalTool
+from pelican.plugins.webassets.vendor.webassets.filter import ExternalTool
 
 
 class RequireJSFilter(ExternalTool):

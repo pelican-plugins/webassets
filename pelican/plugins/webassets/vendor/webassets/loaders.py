@@ -9,18 +9,18 @@ from os import path
 import glob, fnmatch
 import inspect
 import types
-from webassets import six
+from pelican.plugins.webassets.vendor.webassets import six
 try:
     import yaml
 except ImportError:
     pass
 
-from webassets import six
-from webassets import Environment
-from webassets.bundle import Bundle
-from webassets.exceptions import EnvironmentError
-from webassets.filter import register_filter
-from webassets.importlib import import_module
+from pelican.plugins.webassets.vendor.webassets import six
+from pelican.plugins.webassets.vendor.webassets import Environment
+from pelican.plugins.webassets.vendor.webassets.bundle import Bundle
+from pelican.plugins.webassets.vendor.webassets.exceptions import EnvironmentError
+from pelican.plugins.webassets.vendor.webassets.filter import register_filter
+from pelican.plugins.webassets.vendor.webassets.importlib import import_module
 
 
 __all__ = ('Loader', 'LoaderError', 'PythonLoader', 'YAMLLoader',
@@ -190,7 +190,7 @@ class YAMLLoader(object):
 
         Sample usage::
 
-            from webassets.loaders import YAMLLoader
+            from pelican.plugins.webassets.vendor.webassets.loaders import YAMLLoader
             loader = YAMLLoader('asset.yml')
             env = loader.load_environment()
 

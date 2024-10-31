@@ -3,7 +3,7 @@ loaded in the browser, registers automatically.
 
 """
 
-from webassets.filter import ExternalTool
+from pelican.plugins.webassets.vendor.webassets.filter import ExternalTool
 
 
 __all__ = ('DustJS',)

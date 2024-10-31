@@ -5,7 +5,7 @@ except ImportError:
     from . import rjsmin
 
 
-from webassets.filter import Filter
+from pelican.plugins.webassets.vendor.webassets.filter import Filter
 
 
 __all__ = ('RJSMin',)

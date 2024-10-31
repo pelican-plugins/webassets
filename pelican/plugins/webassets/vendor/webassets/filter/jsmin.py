@@ -1,7 +1,7 @@
 from __future__ import absolute_import
 import warnings
 
-from webassets.filter import Filter
+from pelican.plugins.webassets.vendor.webassets.filter import Filter
 
 
 __all__ = ('JSMin',)

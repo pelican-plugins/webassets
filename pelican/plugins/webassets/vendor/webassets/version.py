@@ -6,10 +6,10 @@ from __future__ import with_statement
 
 import os
 import pickle
-from webassets import six
+from pelican.plugins.webassets.vendor.webassets import six
 
-from webassets.merge import FileHunk
-from webassets.utils import md5_constructor, RegistryMetaclass, is_url
+from pelican.plugins.webassets.vendor.webassets.merge import FileHunk
+from pelican.plugins.webassets.vendor.webassets.utils import md5_constructor, RegistryMetaclass, is_url
 
 
 __all__ = ('get_versioner', 'VersionIndeterminableError',
@@ -89,7 +89,7 @@ class TimestampVersion(Version):
         # timestamp of the final file is the fastest way to do this.
         # Note that this works because of our ``save_done`` hook.
         if not hunk:
-            from webassets.bundle import has_placeholder
+            from pelican.plugins.webassets.vendor.webassets.bundle import has_placeholder
             if not has_placeholder(bundle.output):
                 return self.get_timestamp(bundle.resolve_output(ctx))
 
@@ -116,7 +116,7 @@ class TimestampVersion(Version):
 
     @classmethod
     def find_recent_most_timestamp(cls, bundle, ctx):
-        from webassets.bundle import get_all_bundle_files
+        from pelican.plugins.webassets.vendor.webassets.bundle import get_all_bundle_files
         # Recurse through the bundle hierarchy. Check the timestamp of all
         # the bundle source files, as well as any additional
         # dependencies that we are supposed to watch.
@@ -154,7 +154,7 @@ class HashVersion(Version):
 
     def determine_version(self, bundle, ctx, hunk=None):
         if not hunk:
-            from webassets.bundle import has_placeholder
+            from pelican.plugins.webassets.vendor.webassets.bundle import has_placeholder
             if not has_placeholder(bundle.output):
                 hunk = FileHunk(bundle.resolve_output(ctx))
             else:

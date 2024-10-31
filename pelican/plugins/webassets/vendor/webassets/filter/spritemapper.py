@@ -1,8 +1,8 @@
 from __future__ import print_function
 from __future__ import absolute_import
-from webassets.six import StringIO
+from pelican.plugins.webassets.vendor.webassets.six import StringIO
 from contextlib import contextmanager
-from webassets.filter import Filter
+from pelican.plugins.webassets.vendor.webassets.filter import Filter
 
 try:
     from spritecss.main import CSSFile

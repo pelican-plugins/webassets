@@ -2,7 +2,7 @@ from __future__ import absolute_import
 import logging
 import logging.handlers
 
-from webassets.filter import Filter
+from pelican.plugins.webassets.vendor.webassets.filter import Filter
 
 
 __all__ = ('CSSUtils',)

@@ -1,5 +1,5 @@
 import os
-from webassets.filter import ExternalTool, option
+from pelican.plugins.webassets.vendor.webassets.filter import ExternalTool, option
 
 
 __all__ = ('Stylus',)

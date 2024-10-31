@@ -1,8 +1,8 @@
 from __future__ import print_function
 import os, subprocess
 
-from webassets.filter import Filter
-from webassets.exceptions import FilterError, ImminentDeprecationWarning
+from pelican.plugins.webassets.vendor.webassets.filter import Filter
+from pelican.plugins.webassets.vendor.webassets.exceptions import FilterError, ImminentDeprecationWarning
 
 
 __all__ = ('CoffeeScript',)

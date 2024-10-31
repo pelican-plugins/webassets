@@ -9,7 +9,7 @@ This filter based on Jesús Jerez <jerezmoreno@gmail.com> code [1].
 from __future__ import print_function
 from __future__ import absolute_import
 
-from webassets.filter import Filter
+from pelican.plugins.webassets.vendor.webassets.filter import Filter
 
 
 __all__ = ('LibSass',)

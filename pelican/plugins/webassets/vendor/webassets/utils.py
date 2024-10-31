@@ -1,4 +1,4 @@
-from webassets import six
+from pelican.plugins.webassets.vendor.webassets import six
 import contextlib
 import os
 import sys
@@ -44,7 +44,7 @@ else:
     FileNotFoundError = FileNotFoundError
 
 
-from webassets.six import StringIO
+from pelican.plugins.webassets.vendor.webassets.six import StringIO
 
 
 try:
