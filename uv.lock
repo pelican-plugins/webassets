@@ -450,7 +450,7 @@ dependencies = [
     { name = "pelican" },
 ]
 
-[package.optional-dependencies]
+[package.dependency-groups]
 dev = [
     { name = "black" },
     { name = "cssmin" },
@@ -469,21 +469,23 @@ markdown = [
 ]
 
 [package.metadata]
-requires-dist = [
-    { name = "black", marker = "extra == 'dev'", specifier = "==23.3.0" },
-    { name = "cssmin", marker = "extra == 'dev'", specifier = "==0.2.0" },
-    { name = "flake8", marker = "extra == 'dev'", specifier = "==3.9.2" },
-    { name = "flake8-black", marker = "extra == 'dev'", specifier = "==0.3.6" },
-    { name = "invoke", marker = "extra == 'dev'", specifier = "==2.2.0" },
-    { name = "isort", marker = "extra == 'dev'", specifier = "==5.11.5" },
-    { name = "libsass", marker = "extra == 'dev'" },
-    { name = "markdown", marker = "extra == 'dev'", specifier = "==3.4.4" },
-    { name = "markdown", marker = "extra == 'markdown'", specifier = "==3.4.4" },
-    { name = "pelican", specifier = ">=4.5" },
-    { name = "pytest", marker = "extra == 'dev'", specifier = "==6.2.5" },
-    { name = "pytest-cov", marker = "extra == 'dev'", specifier = "==3.0.0" },
-    { name = "pytest-sugar", marker = "extra == 'dev'", specifier = "==0.9.7" },
+requires-dist = [{ name = "pelican", specifier = ">=4.5" }]
+
+[package.metadata.dependency-groups]
+dev = [
+    { name = "black", specifier = "==23.3.0" },
+    { name = "cssmin", specifier = "==0.2.0" },
+    { name = "flake8", specifier = "==3.9.2" },
+    { name = "flake8-black", specifier = "==0.3.6" },
+    { name = "invoke", specifier = "==2.2.0" },
+    { name = "isort", specifier = "==5.11.5" },
+    { name = "libsass" },
+    { name = "markdown", specifier = "==3.4.4" },
+    { name = "pytest", specifier = "==6.2.5" },
+    { name = "pytest-cov", specifier = "==3.0.0" },
+    { name = "pytest-sugar", specifier = "==0.9.7" },
 ]
+markdown = [{ name = "markdown", specifier = "==3.4.4" }]
 
 [[package]]
 name = "platformdirs"
