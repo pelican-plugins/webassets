@@ -21,7 +21,7 @@ requires = ["hatchling", "hatch-vcs", "hatch-fancy-pypi-readme>=22.8.0"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
-packages = ["pelican/plugins/webassets"]
+packages = ["pelican"]
 
 [project]
 name = "pelican-webassets"
@@ -67,7 +67,7 @@ dependencies = [
 [dependency-groups]
 dev = [
     "cssmin == 0.2.0",
-    "libsass",
+    "libsass >=0.22.0",
     "black == 23.3.0",
     "flake8 == 3.9.2",
     "flake8-black == 0.3.6",
@@ -76,7 +76,9 @@ dev = [
     "markdown == 3.4.4",
     "pytest == 6.2.5",
     "pytest-cov == 3.0.0",
-    "pytest-sugar == 0.9.7",]
+    "pytest-sugar == 0.9.7",
+]
+
 markdown = [
     "markdown == 3.4.4",
 ]

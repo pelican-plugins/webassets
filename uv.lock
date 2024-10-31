@@ -479,7 +479,7 @@ dev = [
     { name = "flake8-black", specifier = "==0.3.6" },
     { name = "invoke", specifier = "==2.2.0" },
     { name = "isort", specifier = "==5.11.5" },
-    { name = "libsass" },
+    { name = "libsass", specifier = ">=0.22.0" },
     { name = "markdown", specifier = "==3.4.4" },
     { name = "pytest", specifier = "==6.2.5" },
     { name = "pytest-cov", specifier = "==3.0.0" },

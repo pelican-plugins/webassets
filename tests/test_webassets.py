@@ -18,7 +18,6 @@ CSS_HASH = hashlib.md5(CSS_REF.encode()).hexdigest()[0:8]
 LOGGER_NAME = "pelican.plugins.webassets"
 
 
-@unittest.skipUnless(module_exists("webassets"), "webassets isn't installed")
 @unittest.skipUnless(module_exists("sass"), "libsass isn't installed")
 class TestWebAssets(unittest.TestCase):
     """Base class for testing webassets."""
