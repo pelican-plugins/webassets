@@ -56,7 +56,7 @@ jobs:
           uv sync --frozen --no-sources
 
       - name: Run linters
-        run: pdm run invoke lint --diff
+        run: uv run invoke lint --diff
 
   deploy:
     name: Deploy
