@@ -2,6 +2,7 @@
 
 [![Build Status](https://img.shields.io/github/actions/workflow/status/pelican-plugins/webassets/main.yml?branch=main)](https://github.com/pelican-plugins/webassets/actions)
 [![PyPI Version](https://img.shields.io/pypi/v/pelican-webassets)](https://pypi.org/project/pelican-webassets/)
+[![Downloads](https://img.shields.io/pypi/dm/pelican-webassets)](https://pypi.org/project/pelican-webassets/)
 ![License](https://img.shields.io/pypi/l/pelican-webassets?color=blue)
 
 This [Pelican](https://github.com/getpelican/pelican) plugin allows you to use
