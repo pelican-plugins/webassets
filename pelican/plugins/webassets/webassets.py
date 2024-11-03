@@ -14,6 +14,7 @@ setting. This requires the use of SITEURL in the templates::
 .. _webassets: https://webassets.readthedocs.org/
 
 """
+
 import logging
 import os
 
@@ -22,9 +23,9 @@ from pelican import signals
 logger = logging.getLogger(__name__)
 
 try:
-    import webassets
-    from webassets import Environment
-    from webassets.ext.jinja2 import AssetsExtension
+    from .vendor import webassets
+    from .vendor.webassets import Environment
+    from .vendor.webassets.ext.jinja2 import AssetsExtension
 except ImportError:
     webassets = None
 

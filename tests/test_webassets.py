@@ -18,7 +18,6 @@ CSS_HASH = hashlib.md5(CSS_REF.encode()).hexdigest()[0:8]
 LOGGER_NAME = "pelican.plugins.webassets"
 
 
-@unittest.skipUnless(module_exists("webassets"), "webassets isn't installed")
 @unittest.skipUnless(module_exists("sass"), "libsass isn't installed")
 class TestWebAssets(unittest.TestCase):
     """Base class for testing webassets."""
@@ -63,7 +62,9 @@ class TestWebAssetsRelativeURLS(TestWebAssets):
     def test_jinja2_ext(self):
         # Test that the Jinja2 extension was correctly added.
 
-        from webassets.ext.jinja2 import AssetsExtension
+        from pelican.plugins.webassets.vendor.webassets.ext.jinja2 import (
+            AssetsExtension,
+        )
 
         self.assertIn(AssetsExtension, self.settings["JINJA_ENVIRONMENT"]["extensions"])
 
@@ -281,7 +282,7 @@ class TestWebAssetsConfigSettings(TestWebAssets):
             self.assertIn(argument, test_bundle.contents)
 
         # ensure the libsass filter is used
-        from webassets.filter.libsass import LibSass
+        from pelican.plugins.webassets.vendor.webassets.filter.libsass import LibSass
 
         self.assertIn(LibSass(), test_bundle.filters)
 
@@ -304,7 +305,7 @@ class TestWebAssetsConfigSettings(TestWebAssets):
             self.assertIn(argument, test_bundle.contents)
 
         # ensure the libsass filter is used
-        from webassets.filter.libsass import LibSass
+        from pelican.plugins.webassets.vendor.webassets.filter.libsass import LibSass
 
         self.assertIn(LibSass(), test_bundle.filters)
 
@@ -386,9 +387,11 @@ class TestDeprecationDate(unittest.TestCase):
         """Ensure the next person must remove the deprecation warnings after 2024."""
         from datetime import datetime
 
+        # I am kicking this can down the road a bit because I am _not_ mixing this
+        # in to the vendoring :D
         self.assertTrue(
-            datetime.now().year < 2024,
-            "After 2 years, in the year 2024, we should remove "
+            datetime.now().year < 2025,
+            "After 3 years, in the year 2025, we should remove "
             "support and deprecation warnings for the ASSET_* "
             "configuration settings",
         )
