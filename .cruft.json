@@ -1,0 +1,27 @@
+{
+  "template": "https://github.com/getpelican/cookiecutter-pelican-plugin",
+  "commit": "c3e12ed61d60be88e8cae2488f6edbfab8085ba4",
+  "checkout": null,
+  "context": {
+    "cookiecutter": {
+      "plugin_name": "Web Assets",
+      "repo_name": "webassets",
+      "package_name": "webassets",
+      "distribution_name": "pelican-webassets",
+      "version": "2.1.0",
+      "description": "Pelican plugin to manage web assets such as CSS and JS files",
+      "authors": "{name = \"Pelican Dev Team\", email = \"authors@getpelican.com\"}",
+      "keywords": "\"pelican\", \"plugin\", \"webassets\", \"css\", \"js\", \"minimization\", \"compilation\"",
+      "readme": "README.md",
+      "contributing": "CONTRIBUTING.md",
+      "license": "GNU Affero General Public License v3|AGPL-3.0",
+      "repo_url": "https://github.com/pelican-plugins/webassets",
+      "dev_status": "5 - Production/Stable",
+      "tests_exist": true,
+      "python_version": "~=3.9",
+      "pelican_version": ">=4.5",
+      "_template": "https://github.com/getpelican/cookiecutter-pelican-plugin"
+    }
+  },
+  "directory": null
+}

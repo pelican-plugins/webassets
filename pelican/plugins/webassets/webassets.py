@@ -1,7 +1,4 @@
-# -*- coding: utf-8 -*-
-"""
-Asset management plugin for Pelican
-===================================
+"""Asset management plugin for Pelican.
 
 This plugin allows you to use the `webassets`_ module to manage assets such as
 CSS and JS files.
@@ -32,7 +29,6 @@ except ImportError:
 
 def add_jinja2_ext(pelican):
     """Add Webassets to Jinja2 extensions in Pelican settings."""
-
     if "JINJA_ENVIRONMENT" in pelican.settings:  # pelican 3.7+
         pelican.settings["JINJA_ENVIRONMENT"]["extensions"].append(AssetsExtension)
     else:
@@ -41,7 +37,6 @@ def add_jinja2_ext(pelican):
 
 def create_assets_env(generator):
     """Define the assets environment and pass it to the generator."""
-
     theme_static_dir = generator.settings["THEME_STATIC_DIR"]
     assets_destination = os.path.join(generator.output_path, theme_static_dir)
     generator.env.assets_environment = Environment(

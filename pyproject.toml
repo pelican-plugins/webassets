@@ -1,53 +1,28 @@
-[tool.autopub]
-project-name = "Web Assets"
-git-username = "botpub"
-git-email = "52496925+botpub@users.noreply.github.com"
-append-github-contributor = true
-
-[tool.ruff]
-exclude = ["pelican/plugins/webassets/vendor/", ".venv"]
-
-[tool.ruff.lint.isort]
-section-order = ["future", "standard-library", "first-party", "pelican", "local-folder", "third-party"]
-
-# Designate "pelican" as separate import section
-[tool.ruff.lint.isort.sections]
-pelican = ["pelican"]
-
-[tool.pdm]
-
-[build-system]
-requires = ["hatchling", "hatch-vcs", "hatch-fancy-pypi-readme>=22.8.0"]
-build-backend = "hatchling.build"
-
-[tool.hatch.build.targets.wheel]
-packages = ["pelican"]
-
 [project]
 name = "pelican-webassets"
 version = "2.1.0"
 description = "Pelican plugin to manage web assets such as CSS and JS files"
 authors = [
-  { name ="Pelican Dev Team <authors@getpelican.com>" },
+  {name = "Pelican Dev Team", email = "authors@getpelican.com"},
 ]
-license = "AGPL-3.0"
+license = {text = "AGPL-3.0"}
 readme = "README.md"
 keywords = ["pelican", "plugin", "webassets", "css", "js", "minimization", "compilation"]
-repository = "https://github.com/pelican-plugins/webassets"
-documentation = "https://docs.getpelican.com"
-packages = [
-    { include = "pelican" },
-]
-requires-python = "~= 3.9"
-
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Environment :: Console",
     "Framework :: Pelican",
     "Framework :: Pelican :: Plugins",
     "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: GNU Affero General Public License v3",
     "Operating System :: OS Independent",
     "Programming Language :: JavaScript",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "Topic :: Internet :: WWW/HTTP",
     "Topic :: Software Development :: Build Tools",
     "Topic :: Software Development :: Code Generators",
@@ -56,25 +31,84 @@ classifiers = [
     "Topic :: Software Development :: Pre-processors",
     "Topic :: Software Development :: User Interfaces",
 ]
+requires-python = "~=3.9"
 dependencies = [
-  "pelican >=4.5",
+    "pelican>=4.5",
 ]
 
 [project.urls]
-"Funding" = "https://donate.getpelican.com/"
+"Homepage" = "https://github.com/pelican-plugins/webassets"
 "Issue Tracker" = "https://github.com/pelican-plugins/webassets/issues"
+"Changelog" = "https://github.com/pelican-plugins/webassets/blob/main/CHANGELOG.md"
+"Funding" = "https://donate.getpelican.com/"
 
 [dependency-groups]
-dev = [
-    "cssmin == 0.2.0",
-    "libsass >=0.22.0",
-    "invoke == 2.2.0",
-    "markdown == 3.4.4",
-    "pytest == 6.2.5",
-    "pytest-cov == 3.0.0",
-    "pytest-sugar == 1.0.0",
-    "ruff>=0.7.1",
+lint = [
+    "invoke>=2.2",
+    "ruff>=0.7.2,<0.8.0",
 ]
-markdown = [
-    "markdown == 3.4.4",
+test = [
+    "cssmin==0.2.0",
+    "libsass>=0.22.0",
+    "markdown>=3.4",
+    "pytest>=7.0",
+    "pytest-cov>=4.0",
+    "pytest-sugar>=1.0",
 ]
+
+[tool.autopub]
+project-name = "Web Assets"
+git-username = "botpub"
+git-email = "52496925+botpub@users.noreply.github.com"
+append-github-contributor = true
+
+[tool.ruff]
+exclude = ["pelican/plugins/webassets/vendor/", "tests/test_webassets.py", ".venv"]
+
+[tool.ruff.lint]
+select = [
+  "B",   # flake8-bugbear
+  "BLE", # flake8-blind-except
+  "C4",  # flake8-comprehensions
+  "D",   # pydocstyle
+  "E",   # pycodestyle
+  "F",   # pyflakes
+  "I",   # isort
+  "ICN", # flake8-import-conventions
+  "ISC", # flake8-implicit-str-concat
+  "PGH", # pygrep-hooks
+  "PL",  # pylint
+  "RET", # flake8-return
+  "RUF", # ruff-specific rules
+  "SIM", # flake8-simplify
+  "T10", # flake8-debugger
+  "T20", # flake8-print
+  "TID", # flake8-tidy-imports
+  "TRY", # tryceratops
+  "UP",  # pyupgrade
+  "W",   # pycodestyle
+  "YTT", # flake8-2020
+]
+
+ignore = [
+  "D100",    # missing docstring in public module
+  "D104",    # missing docstring in public package
+  "D203",    # blank line before class docstring
+  "D213",    # multi-line docstring summary should start at the second line
+  "ISC001",  # disabled so `ruff format` works without warning
+]
+
+[tool.ruff.lint.isort]
+combine-as-imports = true
+section-order = ["future", "standard-library", "first-party", "pelican", "local-folder", "third-party"]
+
+# Designate "pelican" as separate import section
+[tool.ruff.lint.isort.sections]
+pelican = ["pelican"]
+
+[build-system]
+requires = ["hatchling", "hatch-vcs", "hatch-fancy-pypi-readme>=22.8.0"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["pelican"]

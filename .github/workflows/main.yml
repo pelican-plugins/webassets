@@ -14,13 +14,14 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.9", "3.10", "3.11", "3.12"]
+        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13"]
 
     steps:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
-      - name: Install pdm
+
+      - name: Set up Python ${{ matrix.python-version }} & PDM
         uses: pdm-project/setup-pdm@v4
         with:
           python-version: ${{ matrix.python-version }}
@@ -29,8 +30,7 @@ jobs:
           version: "2.20.0"
 
       - name: Install dependencies
-        run: |
-          pdm install
+        run: pdm install
 
       - name: Run tests
         run: pdm run invoke tests
@@ -49,15 +49,14 @@ jobs:
         with:
           retry: true
 
-      - name: Install pdm
+      - name: Set up Python & PDM
         uses: pdm-project/setup-pdm@v4
         with:
           python-version: "3.10"
           version: "2.20.0"
 
       - name: Install dependencies
-        run: |
-          pdm install
+        run: pdm install
 
       - name: Run linters
         run: pdm run invoke lint --diff
