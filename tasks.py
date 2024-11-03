@@ -83,6 +83,17 @@ def precommit(c):
 
 
 @task
+def update(c, check=False):
+    """Apply upstream plugin template changes to this project."""
+    if check:
+        logger.info("** Checking for upstream template changes **")
+        c.run(f"{CRUFT} check", pty=PTY)
+    else:
+        logger.info("** Updating project from upstream template **")
+        c.run(f"{CRUFT} update", pty=PTY)
+
+
+@task
 def setup(c):
     """Set up the development environment."""
     if which("pdm") or ACTIVE_VENV:
