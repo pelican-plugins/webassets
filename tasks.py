@@ -1,14 +1,15 @@
+import logging
 import os
-import sys
 from inspect import cleandoc
 from pathlib import Path
 from shutil import which
 
 from invoke import task
 
+logger = logging.getLogger(__name__)
+
 PKG_NAME = "webassets"
 PKG_PATH = Path(f"pelican/plugins/{PKG_NAME}")
-TOOLS = ["pre-commit"]
 
 ACTIVE_VENV = os.environ.get("VIRTUAL_ENV", None)
 VENV_HOME = Path(os.environ.get("WORKON_HOME", "~/.local/share/virtualenvs"))
@@ -16,87 +17,88 @@ VENV_PATH = Path(ACTIVE_VENV) if ACTIVE_VENV else (VENV_HOME.expanduser() / PKG_
 VENV = str(VENV_PATH.expanduser())
 BIN_DIR = "bin" if os.name != "nt" else "Scripts"
 VENV_BIN = Path(VENV) / Path(BIN_DIR)
-PTY = True if os.name != "nt" else False
+
+TOOLS = ("cruft", "pdm", "pre-commit")
+PDM = which("pdm") if which("pdm") else (VENV_BIN / "pdm")
+CMD_PREFIX = f"{VENV_BIN}/" if ACTIVE_VENV else f"{PDM} run "
+CRUFT = which("cruft") if which("cruft") else f"{CMD_PREFIX}cruft"
+PRECOMMIT = which("pre-commit") if which("pre-commit") else f"{CMD_PREFIX}pre-commit"
+PTY = os.name != "nt"
 
 
 @task
-def tests(c):
-    """Run the test suite."""
-    c.run("uv run pytest", pty=PTY)
+def tests(c, deprecations=False):
+    """Run the test suite, optionally with `--deprecations`."""
+    deprecations_flag = "" if deprecations else "-W ignore::DeprecationWarning"
+    c.run(f"{CMD_PREFIX}pytest {deprecations_flag}", pty=PTY)
 
 
 @task
-def ruff(c, fix=False, diff=False):
+def format(c, check=False, diff=False):
+    """Run Ruff's auto-formatter, optionally with `--check` or `--diff`."""
+    check_flag, diff_flag = "", ""
+    if check:
+        check_flag = "--check"
+    if diff:
+        diff_flag = "--diff"
+    c.run(
+        f"{CMD_PREFIX}ruff format {check_flag} {diff_flag} {PKG_PATH} tasks.py", pty=PTY
+    )
+
+
+@task
+def ruff(c, concise=False, fix=False, diff=False):
     """Run Ruff to ensure code meets project standards."""
-    diff_flag, fix_flag = "", ""
+    concise_flag, fix_flag, diff_flag = "", "", ""
+    if concise:
+        concise_flag = "--output-format=concise"
     if fix:
         fix_flag = "--fix"
     if diff:
         diff_flag = "--diff"
-    c.run(f"uv run ruff check {diff_flag} {fix_flag} .", pty=PTY)
+    c.run(f"{CMD_PREFIX}ruff check {concise_flag} {diff_flag} {fix_flag} .", pty=PTY)
 
 
 @task
-def lint(c, fix=False, diff=False):
+def lint(c, concise=False, fix=False, diff=False):
     """Check code style via linting tools."""
-    ruff(c, fix=fix, diff=diff)
+    ruff(c, concise=concise, fix=fix, diff=diff)
+    format(c, check=(not fix), diff=diff)
 
 
 @task
-def uv(c):
-    """Install uv in the local virtual environment."""
-    if not which("uv"):
-        print("** Installing uv in the project virual environment.")
-        c.run(f"{VENV_BIN}/python -m pip install uv", pty=PTY)
-
-
-@task(pre=[uv])
 def tools(c):
     """Install development tools in the virtual environment if not already on PATH."""
     for tool in TOOLS:
         if not which(tool):
-            print(f"** Installing {tool}.")
-            c.run(f"uv pip install {tool}")
+            logger.info(f"** Installing {tool} **")
+            c.run(f"{CMD_PREFIX}pip install {tool}")
 
 
-@task(pre=[tools])
+@task
 def precommit(c):
-    """Install pre-commit hooks to `.git/hooks/pre-commit`."""
-    print("** Installing pre-commit hooks.")
-    pre_commit_cmd = (
-        which("pre-commit") if which("pre-commit") else f"{VENV_BIN}pre-commit"
-    )
-    c.run(f"{pre_commit_cmd} install")
+    """Install pre-commit hooks to .git/hooks/pre-commit."""
+    logger.info("** Installing pre-commit hooks **")
+    c.run(f"{PRECOMMIT} install")
 
 
 @task
 def setup(c):
-    """Set up the development environment. You must have `uv` installed."""
-    if not which("uv"):
+    """Set up the development environment."""
+    if which("pdm") or ACTIVE_VENV:
+        tools(c)
+        c.run(f"{CMD_PREFIX}python -m pip install --upgrade pip", pty=PTY)
+        c.run(f"{PDM} update --dev", pty=PTY)
+        precommit(c)
+        logger.info("\nDevelopment environment should now be set up and ready!\n")
+    else:
         error_message = """
-            uv is not installed, and there is no active virtual environment available.
+            PDM is not installed, and there is no active virtual environment available.
             You can either manually create and activate a virtual environment, or you can
-            install uv by running the following command:
+            install PDM via:
 
-            curl -LsSf https://astral.sh/uv/install.sh | sh
+            curl -sSL https://raw.githubusercontent.com/pdm-project/pdm/main/install-pdm.py | python3 -
 
             Once you have taken one of the above two steps, run `invoke setup` again.
             """  # noqa: E501
-        sys.exit(cleandoc(error_message))
-
-    global ACTIVE_VENV
-    if not ACTIVE_VENV:
-        print("** Creating a virtual environment.")
-        c.run("uv venv")
-        ACTIVE_VENV = ".venv"
-
-    tools(c)
-    c.run("uv sync")
-    precommit(c)
-    success_message = """
-        Development environment should now be set up and ready.
-
-        To enable running invoke, either run it with `uv run inv` or
-        activate the virtual environment with `source .venv/bin/activate`
-        """
-    print(cleandoc(success_message))
+        raise SystemExit(cleandoc(error_message))

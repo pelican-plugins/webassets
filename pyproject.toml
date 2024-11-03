@@ -5,7 +5,7 @@ git-email = "52496925+botpub@users.noreply.github.com"
 append-github-contributor = true
 
 [tool.ruff]
-exclude = ["pelican/plugins/webassets/vendor/"]
+exclude = ["pelican/plugins/webassets/vendor/", ".venv"]
 
 [tool.ruff.lint.isort]
 section-order = ["future", "standard-library", "first-party", "pelican", "local-folder", "third-party"]
@@ -13,6 +13,8 @@ section-order = ["future", "standard-library", "first-party", "pelican", "local-
 # Designate "pelican" as separate import section
 [tool.ruff.lint.isort.sections]
 pelican = ["pelican"]
+
+[tool.pdm]
 
 [build-system]
 requires = ["hatchling", "hatch-vcs", "hatch-fancy-pypi-readme>=22.8.0"]
@@ -36,7 +38,7 @@ documentation = "https://docs.getpelican.com"
 packages = [
     { include = "pelican" },
 ]
-requires-python = "~= 3.7"
+requires-python = "~= 3.9"
 
 classifiers = [
     "Development Status :: 5 - Production/Stable",
