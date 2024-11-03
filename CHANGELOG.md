@@ -1,6 +1,13 @@
 CHANGELOG
 =========
 
+2.1.0 - 2024-11-03
+------------------
+
+Vendor webassets to future-proof the plugin. As a drive-by we have dropped
+Python versions below 3.9, which are not supported by the full set of this
+plugin's' dependencies.
+
 2.0.0 - 2021-02-15
 ------------------
 

@@ -25,7 +25,7 @@ packages = ["pelican"]
 
 [project]
 name = "pelican-webassets"
-version = "2.0.0"
+version = "2.1.0"
 description = "Pelican plugin to manage web assets such as CSS and JS files"
 authors = [
   { name ="Pelican Dev Team <authors@getpelican.com>" },
