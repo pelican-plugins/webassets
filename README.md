@@ -159,7 +159,7 @@ If your raw assets are in directories other than your
 in with `WEBASSETS_SOURCE_PATHS`.
 
 ```python
-WEBASSETS_SOURCE_PATHS = ["stylehseets", "javascript"]
+WEBASSETS_SOURCE_PATHS = ["stylesheets", "javascript"]
 ```
 
 ## Contributing
